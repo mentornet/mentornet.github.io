@@ -9,13 +9,14 @@
     "commander": "^2.15.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
-    "helmet": "^3.12.0"
+    "helmet": "^3.12.0",
+    "nodemon": "^1.17.3"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.v2.js --watch *.js",
-		"push": "git add -A && git commit -m \"Update\" && git push -u origin master"
+    "push": "git add -A && git commit -m \"Update\" && git push -u origin master"
   },
   "author": "",
   "license": "ISC"
