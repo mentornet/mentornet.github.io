@@ -29,6 +29,7 @@ app.use( (req, res, next) => {
 });
 
 const basePath = '/mentornet';
+app.use(basePath, require('./routes.admin'))
 app.use(basePath, require('./routes.auth'))
 app.use(basePath, require('./routes.user'))
 app.use(basePath, require('./routes.mentors'))
