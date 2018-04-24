@@ -1,0 +1,151 @@
+<html>
+	<head>
+		<!-- <HEAD> TEMPLATE -->
+		<!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
+    <link href="./vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
+		<style>
+			a:hover {
+				text-decoration: none;
+			}
+		</style>
+
+		<!-- END TEMPLATE -->
+
+		<title>Mentor Net - Sign Up</title>
+	</head>
+	<body class="text-center">
+
+		<!-- Site Title -->
+		<header class="container mt-3 mb-3">
+			<h4 class="row">
+				<span class="col-6">Mentor Net</span>
+				<small class="text-muted col mt-1"> Sign Up </small>
+			</h4>
+		</header>
+
+		<!-- User pre-auth / log in / sign up mechanism: vue entry -->
+		<div id="vue-entry"
+			class="bg-dark py-3"
+			style="display: none" v-show="1">
+
+				<div class="py-2 w-100 bg-danger text-light" v-show="errorMessage.length">
+					<p class="text-center m-0">Error: {{ errorMessage }}</p>
+				</div>
+
+				<form action="javascript:void(0);" @submit="signup" class="container text-light">
+					<p class="text-left mb-1">PayID</p>
+					<input
+						v-model="payid"
+						class="form-control"
+						type="text"
+						autocomplete="off"
+						placeholder="PayID"
+						required/>
+					<p class="small text-left mt-1 mb-0 text-muted">We need this to verify and refund your payments.</p>
+					
+					<p class="text-left mt-3 mb-1">Password</p>
+					<input
+						v-model="passwd"
+						class="form-control"
+						type="password"
+						autocomplete="off"
+						placeholder="Password"
+						required/>
+					<p class="small text-left mt-1 mb-0 text-muted">You can always change it later.</p>
+
+					<p class="text-left mt-3 mb-1">Name</p>
+					<input
+						v-model="name"
+						class="form-control"
+						type="text"
+						autocomplete="off"
+						placeholder="Your Name"
+						required/>
+					<p class="small text-left mt-1 mb-0 text-muted">This is how other users will see it.</p>
+
+					<p class="text-left mt-3 mb-1">Mobile Number</p>
+					<input
+						v-model="phone"
+						class="form-control"
+						type="tel"
+						autocomplete="off"
+						placeholder="04XXXXXXXX"
+						required/>
+					<p class="small text-left mt-1 mb-0 text-muted">We'll use this to keep in touch with you.</p>
+
+					<button
+						type="submit"
+						class="btn btn-primary w-100 mt-3">Sign Up</button>
+				</form>
+		</div>
+
+		<!-- Footer -->
+		<footer class="mt-3">
+			<p class="mt-0 text-muted">Got a question? Get in touch:</p>
+			<h4 class="row mx-auto w-50">
+				<a href="mailto:tom@joinmentornet.me" class="col">
+					<i class="fa fa-envelope"></i>
+					<p class="h6 mt-2">Email</p>
+				</a>
+
+				<a href="tel:0450797678" class="col">
+					<i class="fa fa-phone"></i>
+					<p class="h6 mt-2">Phone</p>
+				</a>
+			</h4>
+		</footer>
+
+		<!-- Javascript (global) -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./js/generics.js"></script>
+		<script src="./js/session-data.js"></script>
+
+		<!-- Javascript (local) -->
+		<script>
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: {
+					payid: '',
+					passwd: '',
+					name: '',
+					phone: '',
+
+					errorMessage: ''
+				},
+				methods: {
+					signup () {
+						this.setErrorMessage('');
+
+						const ajaxPackage = {
+							payid: this.payid,
+							passwd: this.passwd,
+							name: this.name,
+							phone: this.phone.split('').filter(c => c !== ' ').join('')
+						};
+
+						http.post('/user', ajaxPackage)
+							.then(response => {
+								buildSessionData(response.data);
+								authRedirect();
+							})
+							.catch(handleAxiosError)
+							.then(this.setErrorMessage);
+					},
+					setErrorMessage(msg) {
+						this.errorMessage = msg;
+					}
+				}
+			});
+
+			function authRedirect () {
+				redirect('mentor-list.html');
+			}
+		</script>
+	</body>
+</html>
