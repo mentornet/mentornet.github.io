@@ -1,0 +1,34 @@
+[
+  {
+    "uid": 1524397206555,
+    "payid": "0450797678",
+    "passwd": "$2a$12$6vreoB5TFVCv58hrzRVm3ep6f4fe.TpxVnyYu9PMR/Eh5/kdRhS9i",
+    "name": "Tom",
+    "phone": "0450797678",
+    "isActive": true,
+    "skills": [
+      "How to use Mentor Net"
+    ],
+    "sessions": {
+      "current": -1,
+      "history": []
+    },
+    "isLoggedIn": false
+  },
+  {
+    "uid": 1524397372401,
+    "payid": "Keko",
+    "passwd": "$2a$12$MkcPIRROU./8Om9jPUsmd.iQUgKPhDFSLCgWWRs7FzN6GLFAX0DY6",
+    "name": "Brah",
+    "phone": "0432183382",
+    "isActive": true,
+    "skills": [
+      "Being Based"
+    ],
+    "sessions": {
+      "current": -1,
+      "history": []
+    },
+    "isLoggedIn": true
+  }
+]
