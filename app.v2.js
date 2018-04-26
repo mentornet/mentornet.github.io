@@ -5,8 +5,6 @@ const session = require('express-session');
 
 const app = express();
 
-console.log('test');
-
 app.use(helmet());
 app.use(helmet.noCache()); // Remove in production. Maybe
 app.use(bodyParser.urlencoded());
