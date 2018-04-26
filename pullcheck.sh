@@ -3,6 +3,8 @@
 # Write this file to an every ten minute cron tab i.e.:
 #	*/10 * * * * /home/tom/mentornet-api/pullcheck.sh
 
+git fetch
+
 UPSTREAM=${1:-'@{u}'}
 LOCAL=$(git rev-parse @)
 REMOTE=$(git rev-parse "$UPSTREAM")
