@@ -12,7 +12,7 @@ function redirect(page) {
 }
 
 function reauthAndReturn () {
-	redirect('index.html?redir=' + currentPage());
+	redirect('login.html?redir=' + currentPage());
 }
 
 function handleAxiosError (error) {
@@ -20,7 +20,7 @@ function handleAxiosError (error) {
 	if (error.response) {
 		message = error.response.data;
 		status = error.response.status;
-		if (error.response.status === 401 && currentPage().split('?')[0] !== 'index.html') reauthAndReturn();
+		if (error.response.status === 401 && currentPage().split('?')[0] !== 'login.html') reauthAndReturn();
 	} else if (error.request) {
 		if (error.request.status === 0) {
 			// Axios timeout

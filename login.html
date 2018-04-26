@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- <HEAD> TEMPLATE -->
+		<!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
+		</style>
+
+		<!-- END TEMPLATE -->
+
+		<title>Mentor Net - Log In</title>
+	</head>
+	<body style="height: 100vh" class="container d-flex flex-column align-items-center justify-content-center">
+
+		<div style="width: 20em">
+			<div class="row justify-content-between px-3">
+				<div class="col-8 text-left">
+					<h4 class="mb-0">Mentor Net</h4>
+				</div>
+				<div class="col-4 text-right">
+					<h4 class="mb-0">Log In</h4>
+				</div>
+			</div>
+
+			<div id="vue-entry" style="display:none"  v-show="true">
+				<div class="py-2 w-100 bg-danger text-light" v-show="errorMessage.length">
+					<p class="text-center m-0">Error: {{ errorMessage }}</p>
+				</div>
+
+				<form action="javascript:void(0);" @submit="login">
+					<div class="mt-3 container">
+						<input
+							v-model="payid"
+							class="form-control"
+							type="text"
+							autocomplete="off"
+							placeholder="PayID"
+							required/>
+					</div>
+					
+					<div class="mt-3 container">
+						<input
+							v-model="passwd"
+							class="form-control"
+							type="password"
+							autocomplete="off"
+							placeholder="Password"
+							required/>
+					</div>
+
+					<div class="mt-3 container">
+						<button
+							type="submit"
+							class="btn btn-primary w-100">Login</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<!-- Javascript (global) -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./js/generics.js"></script>
+		<script src="./js/session-data.js"></script>
+
+		<!-- Javascript (local) -->
+		<script>
+			getSessionData()
+				.then(successfulAuthRedirect)
+				.catch(handleAxiosError);
+
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: {
+					payid: '',
+					passwd: '',
+					errorMessage: ''
+				},
+				methods: {
+					login () {
+						this.setErrorMessage('');
+						const jsonPackage = { payid: this.payid, passwd: this.passwd };
+						http.post('/auth', jsonPackage)
+							.then(response => {
+								buildSessionData(response.data);
+								successfulAuthRedirect();
+							})
+							.catch(handleAxiosError)
+							.then(this.setErrorMessage);
+					},
+					setErrorMessage(msg) {
+						this.errorMessage = msg;
+					}
+				}
+			});
+
+			function successfulAuthRedirect () {
+				try {
+					let redirIndex = window.location.search.search('=');
+					let redir = window.location.search.slice(redirIndex+1);
+					if (redir.length === 0) throw new Error('No redirect page given');
+					redirect(redir);
+				} catch (err) {
+					redirect('mentor-list.html');
+				}
+			}
+		</script>
+	</body>
+</html>
