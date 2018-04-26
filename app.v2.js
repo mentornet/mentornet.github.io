@@ -1,5 +1,4 @@
 const express = require('express');
-const morgan = require('morgan');
 const logger = require('morgan');
 const helmet = require('helmet')
 const bodyParser = require('body-parser');
@@ -7,8 +6,8 @@ const session = require('express-session');
 
 const app = express();
 
-app.use(morgan('dev'));
-app.use(morgan('combined', {
+app.use(logger('dev'));
+app.use(logger('combined', {
 	stream: require('fs').createWriteStream('./server.log')
 }));
 
