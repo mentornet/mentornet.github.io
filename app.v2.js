@@ -1,14 +1,23 @@
 const express = require('express');
+const morgan = require('morgan');
+const logger = require('morgan');
 const helmet = require('helmet')
 const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const app = express();
 
+app.use(morgan('dev'));
+app.use(morgan('combined', {
+	stream: require('fs').createWriteStream('./server.log')
+}));
+
 app.use(helmet());
 app.use(helmet.noCache()); // Remove in production. Maybe
+
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
+
 app.use(session({
 	secret: 'ayy'
 }));
