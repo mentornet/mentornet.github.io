@@ -425,10 +425,15 @@
 						this.setErrorMessage('');
 
 						const ajaxPackage = {
-							payid: this.payid,
+							email: this.email,
 							passwd: this.passwd,
+
 							name: this.name,
 							phone: this.phone.split('').filter(c => c !== ' ').join('')
+
+							payid: this.payid,
+							bsb: this.bsb,
+							accountNumber: this.accountNumber
 						};
 
 						http.post('/user', ajaxPackage)

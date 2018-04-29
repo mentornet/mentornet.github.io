@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- <HEAD> TEMPLATE -->
+		<!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
+		</style>
+
+		<!-- END TEMPLATE -->
+
+		<title>Mentor Net</title>
+	</head>
+	<body class="container bg-secondary" style="height: 100vh">
+
+		<div id="vue-entry" class="row align-items-top h-75">
+
+			<div class="col-4 bg-dark text-light py-3 h-100">
+				<h3>Search</h3>
+				<div class="input-group">
+					<input
+						v-model="searchInput"
+						@input="updateListView"
+						class="form-control"
+						type="text"
+						placeholder="Search for a mentor..." />
+				</div>
+
+				<div class="mt-3">
+					<p class="mb-1 small">When is your session?</p>
+					<select v-model="searchTime" @change="updateListView" class="custom-select">
+						<option value="now">Now</option>
+						<option value="later" disabled>Later (Coming soon!)</option>
+					</select>
+				</div>
+
+			</div>
+
+			<div class="col-8 py-3 bg-light">
+				<h3>Mentors</h3>
+				<table class="table table-sm table-hover">
+					<thead>
+						<th class="w-25">Name</th>
+						<th>Skills</th>
+						<th></th>
+					</thead>
+					<tr v-for="mentor in filteredMentors" @click="alert(mentor.link)">
+						<th scope="row"> {{ mentor.name }} </th>
+						<td> {{ mentor.skills.join(', ') }} </td>
+						<td> <i class="fa fa-chevron-right"></i> </td>
+					</tr>
+				</table>
+			</div>
+
+		</div>
+
+		<div class="row h-25 align-items-center">
+			<div class="pt-3 text-center small text-light col-12">
+				<p>Above: mock of desktop mentor list searching for users. Not shown: mobile incorporation of search pane. Also not shown: navigation options</p>
+			</div>
+		</div>
+
+		<!-- Javascript (global) -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./js/generics.js"></script>
+		<script src="./js/fuzzysearch.js"></script>
+		<script src="./js/session-data.js"></script>
+
+		<!-- Javascript (local) -->
+		<script>
+			let pageData = {
+				searchInput: '',
+				searchTime: 'now',
+
+				mentors: [
+					{ name: 'Jim', skills: [ 'Fishing', 'Reading' ], availableNow: true, link: '#' },
+					{ name: 'Jack', skills: [ 'Drinking', 'Fighting' ], availableNow: true, link: '#' },
+					{ name: 'Jerry', skills: [ 'Dancing', 'Shooting' ], availableNow: true, link: '#' },
+					{ name: 'JimBob', skills: [ 'Fishing', 'Heavy Drinking', 'Hustling' ], availableNow: true, link: '#' },
+					{ name: 'Jim', skills: [ 'Writing' ], availableNow: true, link: '#' },
+					{ name: 'Bob', skills: [ 'Making Love', 'Eating' ], availableNow: true, link: '#'},
+					{ name: 'Carl', skills: [ 'Maths', 'English' ], availableNow: true , link: '#' },
+					{ name: 'Dave', skills: [ 'Fitness', 'Looking Good' ], availableNow: true , link: '#' },
+				],
+				filteredMentors: []
+			};
+
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: pageData,
+				methods: {
+					updateListView () {
+						this.filteredMentors = this.mentors.filter(mentor => {
+							if (this.searchInput.length) {
+								const hasSkill = mentor.skills.reduce((prev,skill) => {
+									return prev || fuzzysearch(this.searchInput, skill) || fuzzysearch(this.searchInput, mentor.name);
+								}, false);
+								return hasSkill;
+							}
+							return true;
+						});
+
+						this.filteredMentors = this.filteredMentors.filter(mentor => {
+							return (this.searchTime === 'now' ? mentor.availableNow : true);
+						});
+					}
+				}
+			});
+
+			vue.updateListView();
+
+		</script>
+
+	</body>
+</html>
