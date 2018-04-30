@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- <HEAD> TEMPLATE -->
+		<!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
+
+		<!-- END TEMPLATE -->
+
+		<title>Mentor Net</title>
+	</head>
+	<body id="top">
+
+		<header class="container pt-2 pb-0 bg-dark text-light">
+			<h4 class="row mb-0">
+				<span class="col-6 px-2">Mentor Net</span>
+				<small class="text-right col px-2 mt-1">Your Profile</small>
+			</h4>
+		</header>
+
+		<nav class="container pt-2 pb-2 bg-dark">
+			<div class="row">
+				<div class="col-6 px-2">
+					<a href="search.html" class="btn btn-sm btn-outline-warning w-100">
+						<i class="fa fa-fw fa-search"></i> Learn
+					</a>
+				</div>
+				<div class="col-6 px-2">
+					<span class="btn btn-sm btn-warning w-100">
+						<i class="fa fa-fw fa-user"></i> Profile
+					</span>
+				</div>
+			</div>
+		</nav>
+
+
+		<div id="vue-entry" class="container" style="display: none" v-show="1">
+
+			<div class="row pt-0 pb-2 bg-dark sticky-top" v-if="comingSessions.length || pastSessions.length">
+				<div class="col-6 px-2">
+					<a href="#top" class="btn btn-sm btn-outline-light w-100">
+						<i class="fa fa-list"></i> Sessions
+					</a>
+				</div>
+				<div class="col-6 px-2">
+					<a href="#settings" class="btn btn-sm btn-outline-light w-100">
+						<i class="fa fa-cog"></i> Settings
+					</a>
+				</div>
+			</div>
+
+			<div class="py-2" v-if="comingSessions.length">
+				<small class="text-muted border-bottom" id="sessions">COMING SESSIONS</small>
+
+				<a href="#" class="row pt-2" v-for="session in comingSessions">
+					<div class="col-3"> {{ session.date }} </div>
+					<div class="col-9 text-right"> {{ session.mentorName }} </div>
+				</a>
+
+			</div>
+
+			<div id="settings">
+				<div class="py-2">
+					<small class="text-muted border-bottom">ACCOUNT SETTINGS</small>
+					<div class="row pt-2">
+						<div class="col-3">
+							Email
+						</div>
+						<div class="col-9 text-right">
+							asdasdasd@amsda.com
+						</div>
+					</div>
+					<div class="row pt-2">
+						<div class="col-3">
+							Password
+						</div>
+						<div class="col-9 text-right">
+							<button class="btn btn-sm btn-secondary">Change Password</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="py-2">
+					<small class="text-muted border-bottom">CONTACT INFO</small>
+					<div class="row pt-2">
+						<div class="col-3">
+							Name
+						</div>
+						<div class="col-9 text-right">
+							Based One
+						</div>
+					</div>
+					<div class="row pt-2">
+						<div class="col-4">
+							Phone No.
+						</div>
+						<div class="col-8 text-right">
+							0432 381 930
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Javascript (global) -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./js/generics.js"></script>
+		<script src="./js/session-data.js"></script>
+
+		<!-- Javascript (local) -->
+		<script>
+			function isScrolledIntoView(el) {
+				var rect = el.getBoundingClientRect();
+				var elemTop = rect.top;
+				var elemBottom = rect.bottom;
+
+				// Only completely visible elements return true:
+				var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
+				// Partially visible elements return true:
+				//isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+				return isVisible;
+			}
+
+			let pageData = {
+				comingSessions: [
+				] ,
+				pastSessions: [] 
+			};
+
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: pageData,
+				methods: {
+				}
+			});
+
+			document.onscroll = (ev) => {
+				const settingsHead = document.querySelector('#settings');
+				const settingsButton = document.querySelector("a[href='#settings']");
+				const sessionsButton = document.querySelector("a[href='#top']");
+				if (!isScrolledIntoView(settingsHead)) {
+					settingsButton.className = settingsButton.className.replace("active", "");
+					sessionsButton.className += " active";
+				} else {
+					sessionsButton.className = sessionsButton.className.replace("active", "");
+					settingsButton.className += ' active';
+				}
+			};
+
+			document.onscroll();
+		</script>
+
+	</body>
+</html>
