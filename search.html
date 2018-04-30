@@ -19,12 +19,27 @@
 
 		<header class="container pt-2 pb-0 bg-dark text-light">
 			<h4 class="row mb-0">
-				<span class="col-6">Mentor Net</span>
-				<small class="text-muted text-right col mt-1">Find a Mentor</small>
+				<span class="col-6 px-2">Mentor Net</span>
+				<small class="text-right col px-2 mt-1">Find a Mentor</small>
 			</h4>
 		</header>
 
-		<div id="vue-entry" class="container mb-5">
+		<nav class="container pt-2 pb-0 bg-dark">
+			<div class="row">
+				<div class="col-6 px-2">
+					<a href="#" class="btn btn-warning w-100" disabled>
+						<i class="fa fa-fw fa-search"></i> Learn
+					</a>
+				</div>
+				<div class="col-6 px-2">
+					<a href="my-profile.html" class="btn btn-outline-warning w-100">
+						<i class="fa fa-fw fa-user"></i> Profile
+					</a>
+				</div>
+			</div>
+		</nav>
+
+		<div id="vue-entry" class="container">
 
 			<div class="row">
 				<div class="col-12 py-2 px-2 bg-dark sticky-top">
@@ -34,7 +49,7 @@
 							@input="updateListView"
 							class="form-control w-50"
 							type="text"
-							placeholder="Search by name, skills..." />
+							placeholder="Search by topic or name" />
 						<select v-model="searchTime" @change="updateListView" class="custom-select">
 							<option value="now">Now</option>
 							<option value="later" disabled>Later (Coming soon!)</option>
@@ -57,10 +72,6 @@
 				</div>
 			</div>
 
-		</div>
-
-		<div class="fixed-bottom text-center text-light bg-primary py-3">
-			Testing fixed bottom
 		</div>
 
 		<!-- Javascript (global) -->
