@@ -139,24 +139,24 @@
 
 						<p class="text-center lead text-muted">Step 3: Get Started</p>
 
-						<p>Then you're all set! Check your info to make sure it's right:</p>
+						<p>Then you're all set! Check your info:</p>
 						<!-- TODO -->
 						<table class="w-100">
 							<tr>
 								<th>Email</th>
-								<td class="text-center">{{ email }}</td>
+								<td class="text-right">{{ email }}</td>
 							</tr>
 							<tr>
 								<th>Password</th>
-								<td class="text-center"> Kept secure </td>
+								<td class="text-right"> Kept secure </td>
 							</tr>
 							<tr>
 								<th>Name</th>
-								<td class="text-center">{{ name }}</td>
+								<td class="text-right">{{ name }}</td>
 							</tr>
 							<tr>
 								<th>Phone #</th>
-								<td class="text-center">{{ phone.length ? phone : 'Not given' }}</td>
+								<td class="text-right">{{ phone.length ? phone : 'Not given' }}</td>
 							</tr>
 						</table>
 						<div class="row mt-3">
@@ -316,35 +316,35 @@
 						<table class="w-100">
 							<tr>
 								<th>Email</th>
-								<td class="text-center">{{ email }}</td>
+								<td class="text-right">{{ email }}</td>
 							</tr>
 							<tr>
 								<th>Password</th>
-								<td class="text-center"> Kept secure </td>
+								<td class="text-right"> Kept secure </td>
 							</tr>
 							<tr class="pt-2">
 								<th>Name</th>
-								<td class="text-center">{{ name }}</td>
+								<td class="text-right">{{ name }}</td>
 							</tr>
 							<tr>
 								<th>Phone No.</th>
-								<td class="text-center">{{ phone.length ? phone : 'Not given' }}</td>
+								<td class="text-right">{{ phone.length ? phone : 'Not given' }}</td>
 							</tr>
 							<tr class="pt-2">
 								<th>Skills</th>
-								<td class="text-center">{{ skills.length > 1 ? skills.join(', ') : skills[0] }}</td>
+								<td class="text-right">{{ skills.length > 1 ? skills.join(', ') : skills[0] }}</td>
 							</tr>
 							<tr v-if="payid.length" class="pt-2">
 								<th>PayID</th>
-								<td class="text-center">{{ payid }}</td>
+								<td class="text-right">{{ payid }}</td>
 							</tr>
 							<tr v-if="!payid.length" class="pt-2">
 								<th>BSB</th>
-								<td class="text-center">{{ bsb }}</td>
+								<td class="text-right">{{ bsb }}</td>
 							</tr>
 							<tr v-if="!payid.length">
 								<th>Account No.</th>
-								<td class="text-center">{{ accountNumber }}</td>
+								<td class="text-right">{{ accountNumber }}</td>
 							</tr>
 						</table>
 
