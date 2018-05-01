@@ -136,6 +136,9 @@
 					</div>
 
 					<div v-show="uiState === uiStates.studentFinish">
+
+						<p class="text-center lead text-muted">Step 3: Get Started</p>
+
 						<p>Then you're all set! Check your info to make sure it's right:</p>
 						<!-- TODO -->
 						<table class="w-100">
@@ -171,6 +174,8 @@
 					</div>
 
 					<div v-show="uiState === uiStates.mentorSkills">
+						<p class="text-center lead text-muted">Step 3: Share Your Skills</p>
+
 						<p class="mb-3 py-1" v-if="skills.length === 0">What can you mentor?</p>
 						<form action="javascript:void(0);" @submit="addSkill" class="text-left">
 							<span
@@ -216,6 +221,8 @@
 					</div>
 
 					<div v-show="uiState === uiStates.mentorPayment1">
+						<p class="text-center lead text-muted">Step 4: Preferred Payment</p>
+
 						<p>How would you like to get paid?</p>
 
 						<div class="row">
@@ -237,11 +244,17 @@
 						</div>
 					</div>
 
-					<div v-show="uiState === uiStates.mentorPayment2A">
+					<form action="javascript:void(0)"
+						@submit="payid=''; setState(uiStates.mentorFinish)"
+						v-show="uiState === uiStates.mentorPayment2A">
+						<p class="text-center lead text-muted">Step 4: Preferred Payment</p>
+
 						<input
 							v-model="bsb"
 							class="form-control"
 							type="tel"
+							inputmode="numeric"
+							pattern="\d+"
 							autocomplete="off"
 							placeholder="BSB"
 							required/>
@@ -249,6 +262,8 @@
 							v-model="accountNumber"
 							class="form-control mt-3"
 							type="tel"
+							inputmode="numeric"
+							pattern="\d+"
 							autocomplete="off"
 							placeholder="Account No."
 							required/>
@@ -263,12 +278,14 @@
 								<button
 									class="btn btn-primary w-100"
 									:disabled="!bsbValid || !accountNumberValid"
-									@click="payid=''; setState(uiStates.mentorFinish)">Done</button>
+									type="submit">Done</button>
 							</div>
 						</div>
-					</div>
+					</form>
 
 					<div v-show="uiState === uiStates.mentorPayment2B">
+						<p class="text-center lead text-muted">Step 4: Preferred Payment</p>
+
 						<input
 							v-model="payid"
 							class="form-control"
@@ -293,7 +310,8 @@
 					</div>
 
 					<div v-show="uiState === uiStates.mentorFinish">
-						<p>All set! Check your info to make sure it's right:</p>
+						<p class="text-center lead text-muted">Step 5: Get Started</p>
+						<p>All set! Check your info:</p>
 
 						<table class="w-100">
 							<tr>
