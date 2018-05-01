@@ -19,53 +19,60 @@
 
 		<title>Mentor Net - Log In</title>
 	</head>
-	<body style="height: 100vh" class="container d-flex flex-column align-items-center justify-content-center">
+	<body style="height: 100vh">
 
-		<div style="width: 20em">
-			<div class="row justify-content-between px-3">
-				<div class="col-8 text-left">
-					<a href="index.html" class="text-dark">
-						<h4 class="mb-0">Mentor Net</h4>
-					</a>
+		<header class="container pt-2 pb-2 bg-dark text-light">
+			<h4 class="row mb-0">
+				<a href="index.html" class="text-light col-6 px-2">Mentor Net</a>
+				<small class="text-right col px-2 mt-1">Log In</small>
+			</h4>
+		</header>
+
+		<div id="vue-entry" class="container" style="display:none" v-show="true">
+
+			<form action="javascript:void(0);" @submit="login">
+				<div class="mt-2">
+					<small>Email</small>
+					<input
+						v-model="email"
+						class="form-control"
+						type="email"
+						autocomplete="off"
+						placeholder="Email"
+						:disabled="ajaxLoading"
+						required/>
 				</div>
-				<div class="col-4 text-right">
-					<h4 class="mb-0 text-muted">Log In</h4>
+				
+				<div class="mt-2 ">
+					<small>Password</small>
+					<input
+						v-model="passwd"
+						class="form-control"
+						type="password"
+						autocomplete="off"
+						placeholder="Password"
+						:disabled="ajaxLoading"
+						required/>
 				</div>
-			</div>
 
-			<div id="vue-entry" style="display:none"  v-show="true">
-				<div class="py-2 w-100 bg-danger text-light" v-show="errorMessage.length">
-					<p class="text-center m-0">Error: {{ errorMessage }}</p>
+				<div class="mt-2 pt-2">
+					<button
+						v-show="!ajaxLoading"
+						:disabled="!email.length || !passwd.length"
+						type="submit"
+						class="btn btn-primary w-100">Log In</button>
+
+					<button
+						v-show="ajaxLoading"
+						type="submit"
+						class="btn btn-primary w-100" disabled>
+						<i class="fa fa-pulse fa-spinner"></i>
+					</button>
+
+					<p v-show="errorMessage.length && !ajaxLoading"
+						class="text-center pt-2 text-danger small"> Error: {{ errorMessage }} </p>
 				</div>
-
-				<form action="javascript:void(0);" @submit="login">
-					<div class="mt-3 container">
-						<input
-							v-model="payid"
-							class="form-control"
-							type="text"
-							autocomplete="off"
-							placeholder="PayID"
-							required/>
-					</div>
-					
-					<div class="mt-3 container">
-						<input
-							v-model="passwd"
-							class="form-control"
-							type="password"
-							autocomplete="off"
-							placeholder="Password"
-							required/>
-					</div>
-
-					<div class="mt-3 container">
-						<button
-							type="submit"
-							class="btn btn-primary w-100">Login</button>
-					</div>
-				</form>
-			</div>
+			</form>
 		</div>
 
 		<!-- Javascript (global) -->
@@ -76,23 +83,27 @@
 
 		<!-- Javascript (local) -->
 		<script>
-			getSessionData()
+			sessionManager.getSessionData()
 				.then(successfulAuthRedirect)
 				.catch(handleAxiosError);
 
 			let vue = new Vue({
 				el: '#vue-entry',
 				data: {
-					payid: '',
+					email: '',
 					passwd: '',
+
+					ajaxLoading: false,
 					errorMessage: ''
 				},
 				methods: {
 					login () {
 						this.setErrorMessage('');
-						const jsonPackage = { payid: this.payid, passwd: this.passwd };
+						this.ajaxLoading = true;
+						const jsonPackage = { email: this.email, passwd: this.passwd };
 						http.post('/auth', jsonPackage)
 							.then(response => {
+								this.ajaxLoading = false;
 								buildSessionData(response.data);
 								successfulAuthRedirect();
 							})
@@ -101,6 +112,7 @@
 					},
 					setErrorMessage(msg) {
 						this.errorMessage = msg;
+						this.ajaxLoading = false;
 					}
 				}
 			});
@@ -112,7 +124,7 @@
 					if (redir.length === 0) throw new Error('No redirect page given');
 					redirect(redir);
 				} catch (err) {
-					redirect('mentor-list.html');
+					redirect('search.html');
 				}
 			}
 		</script>

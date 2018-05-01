@@ -20,23 +20,17 @@
 	</head>
 	<body>
 
-		<div style="width: 20em; height: 100vh" class="container d-flex flex-column align-items-center justify-content-center px-1">
-
-			<div class="row align-items-center justify-content-between w-100">
-				<div class="col-6 text-left">
-					<a href="index.html" class="text-dark">
-						<h4 class="mb-0">Mentor Net</h4>
-					</a>
-				</div>
-				<div class="col-6 text-right">
-					<h4 class="mb-0 text-muted">Sign Up</h4>
-				</div>
-			</div>
+			<header class="container pt-2 pb-2 bg-dark text-light">
+				<h4 class="row mb-0">
+					<a href="index.html" class="text-light col-6 px-2">Mentor Net</a>
+					<small class="text-right col px-2 mt-1">Sign Up</small>
+				</h4>
+			</header>
 
 			<!-- User pre-auth / log in / sign up mechanism: vue entry -->
 			<div id="vue-entry"
 				style="display: none" v-show="true"
-				class="text-center py-3 w-100">
+				class="container py-3 w-100">
 
 					<div class="py-2 w-100 bg-danger text-light" v-show="errorMessage.length">
 						<p class="text-center m-0">Error: {{ errorMessage }}</p>
@@ -46,23 +40,28 @@
 						action="javascript:void(0)"
 						@submit="setState(uiStates.contactDetails)"
 						v-show="uiState === uiStates.loginDetails">
+
+						<p class="text-center lead text-muted">Step 1: Login Details</p>
+
+						<small>Email</small>
 						<input
 							v-model="email"
 							@input="(ev) => isEmailInvalid = !ev.target.checkValidity()"
 
-							class="form-control"
+							class="form-control mb-2"
 							type="email"
 							autocomplete="off"
 							placeholder="example@email.com"
 							required/>
+
+						<small>Password</small>
 						<input
 							v-model="passwd"
-							class="form-control mt-3"
+							class="form-control"
 							type="password"
 							autocomplete="off"
 							placeholder="Password"
 							required/>
-						<small>You'll use these to log in.</small>
 
 						<div class="mt-3">
 							<button
@@ -77,6 +76,9 @@
 						action="javascript:void(0)"
 						@submit="setState(uiStates.mentorSwitch)"
 						v-show="uiState === uiStates.contactDetails">
+
+						<p class="text-center lead text-muted">Step 2: Contact Details</p>
+
 						<input
 							v-model="name"
 							class="form-control"
@@ -84,7 +86,7 @@
 							autocomplete="off"
 							placeholder="Your Name"
 							required/>
-						<small>Other users will see you by your name.</small>
+						<p class="small mb-0 pt-1">Other users will see you by your name.</p>
 
 						<input
 							v-model="phone"
@@ -93,7 +95,7 @@
 							autocomplete="off"
 							placeholder="04XXXXXXXX"
 							/>
-						<small>You don't have to, but if you give us your phone number we can contact you easier.</small>
+						<p class="small mb-0 pt-1">If you give us your phone number we can contact you more easily.</p>
 
 						<div class="row mt-3">
 							<div class="col">
@@ -342,7 +344,6 @@
 						</div>
 					</div>
 			</div>
-		</div>
 
 		<!-- Javascript (global) -->
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -352,44 +353,46 @@
 
 		<!-- Javascript (local) -->
 		<script>
+			let pageData = {
+				email: '',
+				passwd: '',
+
+				name: '',
+				phone: '',
+
+				skills: [],
+
+				payid: '',
+				bsb: '',
+				accountNumber: '',
+
+				errorMessage: '',
+				uiState: 0,
+
+				uiStates: {
+					loginDetails: 0,
+					contactDetails: 1,
+
+					mentorSwitch: 2,
+
+					studentFinish: 3,
+
+					mentorSkills: 4,
+					mentorPayment1: 5,
+					mentorPayment2A: 6,
+					mentorPayment2B: 7,
+					mentorFinish: 8
+				},
+
+				nextButtonClass: 'btn btn-primary w-100 ',
+				prevButtonClass: 'btn btn-secondary w-100 ',
+
+				isEmailInvalid: true
+			};
+
 			let vue = new Vue({
 				el: '#vue-entry',
-				data: {
-					email: '',
-					passwd: '',
-
-					name: '',
-					phone: '',
-
-					skills: [],
-
-					payid: '',
-					bsb: '',
-					accountNumber: '',
-
-					errorMessage: '',
-					uiState: 0,
-
-					uiStates: {
-						loginDetails: 0,
-						contactDetails: 1,
-
-						mentorSwitch: 2,
-
-						studentFinish: 3,
-
-						mentorSkills: 4,
-						mentorPayment1: 5,
-						mentorPayment2A: 6,
-						mentorPayment2B: 7,
-						mentorFinish: 8
-					},
-
-					nextButtonClass: 'btn btn-primary w-100 ',
-					prevButtonClass: 'btn btn-secondary w-100 ',
-
-					isEmailInvalid: true
-				},
+				data: pageData,
 				computed: {
 					bsbValid () {
 						return this.bsb.length === 6 && Number.isNaN(Number(this.bsb)) === false;
@@ -399,8 +402,13 @@
 					}
 				},
 				methods: {
+					buildSignupDetails(model) {
+						Object.keys(model).forEach(key => this[key] = model[key]);
+					},
 					setState(state) {
 						this.uiState = state;
+						window.location.hash = state;
+						sessionStorage.setItem('signupDetails', JSON.stringify(JSON.parse(JSON.stringify(this.$data))));
 					},
 					addSkill () {
 						let skillInput = this.$refs.skillInput;
@@ -429,7 +437,7 @@
 							passwd: this.passwd,
 
 							name: this.name,
-							phone: this.phone.split('').filter(c => c !== ' ').join('')
+							phone: this.phone.split('').filter(c => c !== ' ').join(''),
 
 							payid: this.payid,
 							bsb: this.bsb,
@@ -438,6 +446,7 @@
 
 						http.post('/user', ajaxPackage)
 							.then(response => {
+								sessionStorage.removeItem('signupDetails');
 								buildSessionData(response.data);
 								authRedirect();
 							})
@@ -452,6 +461,14 @@
 
 			function authRedirect () {
 				redirect('mentor-list.html');
+			}
+
+			if (sessionStorage.getItem('signupDetails')) {
+				vue.buildSignupDetails(JSON.parse(sessionStorage.getItem('signupDetails')));
+			}
+
+			if (window.location.hash) {
+				vue.setState(Number(window.location.hash.slice(1)));
 			}
 		</script>
 	</body>

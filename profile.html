@@ -38,10 +38,9 @@
 			</div>
 		</nav>
 
-
 		<div id="vue-entry" class="container" style="display: none" v-show="1">
 
-			<div class="row pt-0 pb-2 bg-dark sticky-top" v-if="comingSessions.length || pastSessions.length">
+			<div class="row pt-0 pb-2 bg-dark sticky-top" v-if="hasSessions">
 				<div class="col-6 px-2">
 					<a href="#top" class="btn btn-sm btn-outline-light w-100">
 						<i class="fa fa-list"></i> Sessions
@@ -64,6 +63,16 @@
 
 			</div>
 
+			<div class="py-2" v-if="pastSessions.length">
+				<small class="text-muted border-bottom" id="sessions">COMING SESSIONS</small>
+
+				<a href="#" class="row pt-2" v-for="session in pastSessions">
+					<div class="col-3"> {{ session.date }} </div>
+					<div class="col-9 text-right"> {{ session.mentorName }} </div>
+				</a>
+
+			</div>
+
 			<div id="settings">
 				<div class="py-2">
 					<small class="text-muted border-bottom">ACCOUNT SETTINGS</small>
@@ -72,7 +81,7 @@
 							Email
 						</div>
 						<div class="col-9 text-right">
-							asdasdasd@amsda.com
+							{{ profile.email }}
 						</div>
 					</div>
 					<div class="row pt-2">
@@ -92,7 +101,7 @@
 							Name
 						</div>
 						<div class="col-9 text-right">
-							Based One
+							{{ profile.name }}
 						</div>
 					</div>
 					<div class="row pt-2">
@@ -100,7 +109,7 @@
 							Phone No.
 						</div>
 						<div class="col-8 text-right">
-							0432 381 930
+							{{ profile.phone }}
 						</div>
 					</div>
 				</div>
@@ -116,6 +125,42 @@
 
 		<!-- Javascript (local) -->
 		<script>
+			let pageData = {
+				comingSessions: [],
+				pastSessions: [],
+
+				profile: sessionManager.getDataSubset('email', 'name', 'phone')
+			};
+
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: pageData,
+				computed: {
+					hasSessions () {
+						return this.comingSessions.length || this.pastSessions.length;
+					}
+				},
+				methods: {
+				}
+			});
+
+			if (vue.hasSessions) {
+				document.onscroll = (ev) => {
+					const settingsHead = document.querySelector('#settings');
+					const settingsButton = document.querySelector("a[href='#settings']");
+					const sessionsButton = document.querySelector("a[href='#top']");
+					if (!isScrolledIntoView(settingsHead)) {
+						settingsButton.className = settingsButton.className.replace("active", "");
+						sessionsButton.className += " active";
+					} else {
+						sessionsButton.className = sessionsButton.className.replace("active", "");
+						settingsButton.className += ' active';
+					}
+				};
+
+				document.onscroll();
+			}
+
 			function isScrolledIntoView(el) {
 				var rect = el.getBoundingClientRect();
 				var elemTop = rect.top;
@@ -127,34 +172,6 @@
 				//isVisible = elemTop < window.innerHeight && elemBottom >= 0;
 				return isVisible;
 			}
-
-			let pageData = {
-				comingSessions: [
-				] ,
-				pastSessions: [] 
-			};
-
-			let vue = new Vue({
-				el: '#vue-entry',
-				data: pageData,
-				methods: {
-				}
-			});
-
-			document.onscroll = (ev) => {
-				const settingsHead = document.querySelector('#settings');
-				const settingsButton = document.querySelector("a[href='#settings']");
-				const sessionsButton = document.querySelector("a[href='#top']");
-				if (!isScrolledIntoView(settingsHead)) {
-					settingsButton.className = settingsButton.className.replace("active", "");
-					sessionsButton.className += " active";
-				} else {
-					sessionsButton.className = sessionsButton.className.replace("active", "");
-					settingsButton.className += ' active';
-				}
-			};
-
-			document.onscroll();
 		</script>
 
 	</body>
