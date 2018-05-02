@@ -111,12 +111,11 @@
 				}
 			});
 
-			vue.updateListView();
-
 			// TODO: loading indicator UI while AJAX fetches mentors
 			http.get('/mentors')
 				.then(response => {
 					vue.mentors = response.data;
+					vue.updateListView();
 				}).catch(err => {
 					// TODO: show error on page
 					handleAxiosError(err);
