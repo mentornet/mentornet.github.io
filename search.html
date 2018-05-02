@@ -60,7 +60,7 @@
 				<div class="col-12 py-2">
 					<small class="text-muted">AVAILABLE MENTORS</small>
 					<!-- TODO: Build the link to the mentor booking -->
-					<a :href="'#' + mentor.name"
+					<a :href="'mentor.html?uid=' + mentor.uid"
 						class="row border-top py-2"
 						v-for="mentor in filteredMentors">
 						<div class="col-3">
