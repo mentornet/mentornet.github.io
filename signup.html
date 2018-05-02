@@ -483,11 +483,11 @@
 
 			if (sessionStorage.getItem('signupDetails')) {
 				vue.buildSignupDetails(JSON.parse(sessionStorage.getItem('signupDetails')));
+				if (window.location.hash) {
+					vue.setState(Number(window.location.hash.slice(1)));
+				}
 			}
 
-			if (window.location.hash) {
-				vue.setState(Number(window.location.hash.slice(1)));
-			}
 		</script>
 	</body>
 </html>
