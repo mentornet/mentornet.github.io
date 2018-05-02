@@ -104,7 +104,7 @@
 						http.post('/auth', jsonPackage)
 							.then(response => {
 								this.ajaxLoading = false;
-								sessionManager.buildSessionData(response.data);
+								sessionManager.setDataFromModel(response.data);
 								successfulAuthRedirect();
 							})
 							.catch(handleAxiosError)

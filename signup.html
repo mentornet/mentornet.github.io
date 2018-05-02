@@ -465,7 +465,7 @@
 						http.post('/user', ajaxPackage)
 							.then(response => {
 								sessionStorage.removeItem('signupDetails');
-								sessionManager.buildSessionData(response.data);
+								sessionManager.setDataFromModel(response.data);
 								authRedirect();
 							})
 							.catch(handleAxiosError)
