@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- <HEAD> TEMPLATE -->
+		<!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
+		</style>
+
+		<!-- END TEMPLATE -->
+
+		<title>Mentor Net</title>
+	</head>
+	<body>
+
+		<header class="container pt-2 pb-0 bg-dark text-light">
+			<h4 class="row mb-0">
+				<a href="#" class="col-6 px-2 text-light">Mentor Net</a>
+				<small class="text-right col pl-0 pr-2 mt-1">Session Requests</small>
+			</h4>
+		</header>
+
+		<nav class="container pt-2 pb-2 bg-dark">
+			<div class="row">
+				<div class="col-6 px-2">
+					<span class="btn btn-sm btn-warning w-100">
+						<i class="fa fa-fw fa-list"></i> Teach
+					</span>
+				</div>
+				<div class="col-6 px-2">
+					<a href="mentor-profile.html" class="btn btn-sm btn-outline-warning w-100">
+						<i class="fa fa-fw fa-user"></i> Profile
+					</a>
+				</div>
+			</div>
+		</nav>
+
+		<div id="vue-entry" class="container">
+
+			<small class="pt-2 text-muted border-bottom">REQUESTS FROM STUDENTS</small>
+
+			<!-- TODO: Implement loading UI -->
+
+			<a v-for="request in sessionRequests"
+				:href="getRequestURL(request.uid)"
+				class="row border-top py-2">
+
+				<div class="col-5">
+					{{ relativeTimestamp(request.timestamp) }}
+				</div>
+
+				<div class="col-7">
+					{{ request.name }}
+				</div>
+
+			</a>
+
+		</div>
+
+		<!-- Javascript (global) -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./js/generics.js"></script>
+		<script src="./js/session-data.js"></script>
+
+		<!-- Javascript (local) -->
+		<script>
+			let pageData = {
+				sessionRequests: [
+					// Example
+					{ timestamp: Date.now()-(1000*60*18), name: 'Abdul Jamar', uid: -1 }
+				]
+			};
+
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: pageData,
+				methods: {
+					getRequestURL (uid) {
+						return '/session.html?uid=' + uid;
+					},
+					relativeTimestamp (rawTimestamp) {
+						let now = Date.now();
+						let rawDiff = now - rawTimestamp;
+						let keys = [ 'secs', 'mins', 'hrs', 'days' ];
+						let values = [
+							rawDiff / 1000,
+							rawDiff / (60*1000),
+							rawDiff / (60*60*1000),
+							rawDiff / (24*60*60*1000)
+						].map(Math.floor);
+
+						let bestValue = values.reduce((a,b) => b >= 1 ? b : a);
+						let bestIndex = values.indexOf(bestValue);
+						let bestKey = keys[bestIndex];
+
+						return `${bestValue} ${bestKey} ago`;
+					}
+				},
+				mounted () {
+					// TODO: loading indicator UI while AJAX fetches requests
+
+					// TODO: API endpoint for a mentor's session requests
+				}
+			});
+
+		</script>
+
+	</body>
+</html>

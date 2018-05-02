@@ -24,7 +24,7 @@ function handleAxiosError (error) {
 	} else if (error.request) {
 		if (error.request.status === 0) {
 			// Axios timeout
-			message = 'Response timed out.';
+			message = 'The Mentor Net database is offline, please come back later';
 		} else { 
 			message = error.request;
 		}
