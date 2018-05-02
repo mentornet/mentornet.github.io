@@ -50,7 +50,7 @@
 							class="form-control form-control-sm w-50"
 							type="text"
 							placeholder="Search by topic or name" />
-						<select v-model="searchTime" @change="updateListView" class="custom-select custom-select-sm">
+						<select class="custom-select custom-select-sm">
 							<option value="now">Today</option>
 							<option value="later" disabled>Later (Coming soon!)</option>
 						</select>
@@ -59,6 +59,7 @@
 
 				<div class="col-12 py-2">
 					<small class="text-muted">AVAILABLE MENTORS</small>
+					<!-- TODO: Build the link to the mentor booking -->
 					<a :href="'#' + mentor.name"
 						class="row border-top py-2"
 						v-for="mentor in filteredMentors">
@@ -85,25 +86,9 @@
 		<script>
 			let pageData = {
 				searchInput: '',
-				searchTime: 'now',
 
 				mentors: [
-					{ name: 'Jim', skills: [ 'Fishing', 'Reading' ], availableNow: true, link: '#' },
-					{ name: 'Dave', skills: [ 'Fitness', 'Looking Good' ], availableNow: true , link: '#' },
-					{ name: 'Jerry', skills: [ 'Dancing', 'Shooting' ], availableNow: true, link: '#' },
-					{ name: 'Jack', skills: [ 'Drinking', 'Fighting' ], availableNow: true, link: '#' },
-					{ name: 'Jack', skills: [ 'Drinking', 'Fighting' ], availableNow: true, link: '#' },
-					{ name: 'Jack', skills: [ 'Drinking', 'Fighting' ], availableNow: true, link: '#' },
-					{ name: 'Jack', skills: [ 'Drinking', 'Fighting' ], availableNow: true, link: '#' },
-					{ name: 'Jack', skills: [ 'Drinking', 'Fighting' ], availableNow: true, link: '#' },
-					{ name: 'Jack', skills: [ 'Drinking', 'Fighting' ], availableNow: true, link: '#' },
-					{ name: 'Jack', skills: [ 'Drinking', 'Fighting' ], availableNow: true, link: '#' },
-					{ name: 'Bob', skills: [ 'Making Love', 'Eating' ], availableNow: true, link: '#'},
-					{ name: 'JimBob', skills: [ 'Fishing', 'Heavy Drinking', 'Hustling' ], availableNow: true, link: '#' },
-					{ name: 'Jim', skills: [ 'Writing' ], availableNow: true, link: '#' },
-					{ name: 'Bob', skills: [ 'Making Love', 'Eating' ], availableNow: true, link: '#'},
-					{ name: 'Carl', skills: [ 'Maths', 'English' ], availableNow: true , link: '#' },
-					{ name: 'Bob', skills: [ 'Making Love', 'Eating' ], availableNow: true, link: '#'},
+					/* Expects { name, [skills], uid } */
 				],
 				filteredMentors: []
 			};
@@ -122,15 +107,20 @@
 							}
 							return true;
 						});
-
-						this.filteredMentors = this.filteredMentors.filter(mentor => {
-							return (this.searchTime === 'now' ? mentor.availableNow : true);
-						});
 					}
 				}
 			});
 
 			vue.updateListView();
+
+			// TODO: loading indicator UI while AJAX fetches mentors
+			http.get('/mentors')
+				.then(response => {
+					vue.mentors = response.data;
+				}).catch(err => {
+					// TODO: show error on page
+					handleAxiosError(err);
+				});
 
 		</script>
 
