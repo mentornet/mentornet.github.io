@@ -17,9 +17,9 @@ module.exports = {
 		return dataUtils.readDB(dbPath)
 			.then(users => {
 				const matches = users.filter(user => {
-					const samePayID = user.payid === loginInfo.payid;
+					const sameEmail = user.email === loginInfo.email;
 					const sameHash  = bcrypt.compareSync(loginInfo.passwd, user.passwd);
-					return samePayID && sameHash;
+					return sameEmail && sameHash;
 				});
 
 				if (matches.length === 0)
@@ -70,26 +70,25 @@ module.exports = {
 	},
 	create: async function create (userCreationData) {
 		// 1. Validate given text input
-		const { name, passwd, payid, phone } = userCreationData;
+		const { name, passwd, email, phone, payid } = userCreationData;
 
+		if (!email || email.length == 0)
+			throw { statusCode: 406, message: 'Give an email to sign up.' }
 		if (!name || name.length == 0)
 			throw { statusCode: 406, message: 'Give a name to sign up.' }
 		if (!passwd || passwd.length == 0)
 			throw { statusCode: 406, message: 'Give a password to sign up.' }
-		if (!payid || payid.length == 0)
-			throw { statusCode: 406, message: 'Give a payid to sign up.' }
-		if (!phone
-			|| phone.length !== 10
-			|| phone.slice(0, 2) !== '04')
-			throw { statusCode: 406, message: 'Give a valid phone number to sign up.' }
 
 		const userData = {
 			uid: Date.now(),
-			payid,
+
+			email,
 			passwd: hashPassword(passwd),
 
 			name,
 			phone,
+
+			payid,
 
 			isActive: false,
 			isLoggedIn: true,

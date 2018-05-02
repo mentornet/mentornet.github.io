@@ -13,7 +13,7 @@
       "current": -1,
       "history": []
     },
-    "isLoggedIn": true
+    "isLoggedIn": false
   },
   {
     "uid": 1524397372401,
@@ -30,5 +30,48 @@
       "history": []
     },
     "isLoggedIn": true
+  },
+  {
+    "uid": 1525256775354,
+    "payid": "",
+    "passwd": "$2a$12$lONNX5Bql.PTxMHr/UbD9eQOObwMHPdhJ9PUfC6XumEC.iAr8SyIy",
+    "name": "Tom",
+    "phone": "",
+    "isActive": false,
+    "isLoggedIn": true,
+    "skills": [],
+    "sessions": {
+      "current": -1,
+      "history": []
+    }
+  },
+  {
+    "uid": 1525256941748,
+    "payid": "",
+    "passwd": "$2a$12$7KurUISZ1sgkOvLMgSh70.Amu/KmKdkltJ4J5HExk8qrSMLmA3nAO",
+    "name": "Tom",
+    "phone": "",
+    "isActive": false,
+    "isLoggedIn": true,
+    "skills": [],
+    "sessions": {
+      "current": -1,
+      "history": []
+    }
+  },
+  {
+    "uid": 1525257127214,
+    "email": "tom@joinmentornet.me",
+    "passwd": "$2a$12$UWQdenTRd8RrtHFuikER5eu2A8OkP.Fy7kuzby6zPDrgoi34Ypm.6",
+    "name": "Tom",
+    "phone": "",
+    "payid": "",
+    "isActive": false,
+    "isLoggedIn": true,
+    "skills": [],
+    "sessions": {
+      "current": -1,
+      "history": []
+    }
   }
 ]

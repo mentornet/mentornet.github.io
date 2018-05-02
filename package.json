@@ -17,9 +17,13 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.v2.js --watch *.js ",
+    "start": "nodemon app.v2.js",
     "push": "git add -A && git commit -m \"Update\" && git push -u origin master"
   },
+	"nodemonConfig": {
+		"ignore": [ "data/*" ],
+		"delay": "1000"
+	},
   "author": "",
   "license": "ISC"
 }
