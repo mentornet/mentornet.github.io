@@ -42,33 +42,45 @@
 		<div id="vue-entry" class="container">
 
 			<div class="row bg-dark sticky-top text-light justify-content-center py-2 px-2">
-					<div v-show="state === states.canRequest" class="col-12 px-0">
-						<button class="btn btn-primary btn-sm w-100"
-							@click="setState(states.enteringMinutes)">
-							Book Now
-						</button>
-					</div>
-
-					<div v-show="state === states.enteringMinutes" class="col">
-						<form class="row" action="javascript:void(0);"
-								@submit="requestSession(); setState(states.hasRequested)">
-
-							<div class="col-6 input-group pl-0 pr-2">
-								<span class="pt-1">For</span>
-								<input v-model="agreedTime" type="tel" pattern="\d+" class="mx-3 form-control-sm form-control text-center" required/>
-								<span class="pt-1">minutes</span>
-							</div>
-							<div class="col-6 pl-2 pr-0">
-								<button
-									type="submit"
-									class="btn btn-sm btn-primary w-100">Go</button>
-							</div>
-					</div>
-
-					<div v-show="state === states.hasRequested" class="col text-center">
-						Done
-					</div>
+				<div v-show="state === states.canRequest" class="col-12 px-0">
+					<button class="btn btn-primary btn-sm w-100"
+						@click="setState(states.enteringMinutes)">
+						Book Now
+					</button>
 				</div>
+
+				<div v-show="state === states.enteringMinutes" class="col">
+					<form class="row" action="javascript:void(0);"
+							@submit="requestSession(); setState(states.hasRequested)">
+
+						<div class="col-6 input-group pl-0 pr-2">
+							<span class="pt-1">For</span>
+							<input v-model="agreedTime" type="tel" pattern="\d+" class="mx-3 form-control-sm form-control text-center" required/>
+							<span class="pt-1">minutes</span>
+						</div>
+						<div class="col-6 pl-2 pr-0">
+							<button
+								type="submit"
+								class="btn btn-sm btn-primary w-100">Go</button>
+						</div>
+				</div>
+
+				<div v-show="state === states.hasRequested" class="col text-center">
+					Done
+				</div>
+			</div>
+
+			<div class="py-2">
+				Here is where the info about the mentor would go. We should note their
+				name, what they can mentor, and then data that validates to students their
+				credibility as a mentor:
+				<ul>
+					<li>Average rating</li>
+					<li>How long they've been mentoring / how many sessions they've taken</li>
+					<li>Credentials (e.g.: grades, degrees)</li>
+					<li>Written feedback e.g.: "Helped me get a HD!"</li>
+					<li>Social media (needs considering)</li>
+				</ul>
 			</div>
 
 		</div>
