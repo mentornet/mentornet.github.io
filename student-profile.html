@@ -61,16 +61,65 @@
 			</div>
 
 			<div id="settings">
-				<div class="py-2">
+				<!-- TODO: show a loading indicator when updating via AJAX -->
+
+				<!-- TODO: show an editing form when editing -->
+				<div class="py-2" v-show="isEditing">
+					<div class="row">
+						<div class="col-6">
+							<small class="text-muted border-bottom">PROFILE SETTINGS</small>
+						</div>
+						<div class="col-3 px-2">
+							<button @click="confirmEdit()" class="btn btn-sm btn-outline-success py-0 w-100">
+								<i class="fa fa-fw fa-check"></i> 
+							</button>
+						</div>
+						<div class="col-3 px-2">
+							<button @click="cancelEdit()" class="btn btn-sm btn-outline-danger py-0 w-100">
+								<i class="fa fa-fw fa-times"></i> 
+							</button>
+						</div>
+					</div>
+					<div class="row pt-2">
+						<div class="col-3">
+							Email
+						</div>
+						<div class="col-9 text-right">
+							{{ profile.email }}
+						</div>
+					</div>
+
+					<div class="row pt-2">
+						<div class="col-3">
+							Name
+						</div>
+						<div class="col-9 text-right">
+							{{ profile.name }}
+						</div>
+					</div>
+
+					<div class="row pt-2">
+						<div class="col-4">
+							Phone No.
+						</div>
+						<div class="col-8 text-right">
+							{{ profile.phone }}
+						</div>
+					</div>
+
+					<!-- TODO: Payment details go here -->
+				</div>
+
+				<!-- TODO: hide this div when editing -->
+				<div class="py-2" v-show="!isEditing">
 					<div class="row">
 						<div class="col-6">
 							<small class="text-muted border-bottom">PROFILE SETTINGS</small>
 						</div>
 						<div class="col-6 text-right">
-							<!-- TODO: Hook up with config endpoints -->
-							<a href="#" class="btn btn-sm btn-outline-secondary py-0">
+							<button @click="startEdit()" class="btn btn-sm btn-outline-secondary py-0">
 								<i class="fa fa-fw fa-cog"></i> Edit
-							</a>
+							</button>
 						</div>
 					</div>
 					<div class="row pt-2">
