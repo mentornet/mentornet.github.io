@@ -26,8 +26,8 @@
 		<nav class="container pt-2 pb-2 bg-dark">
 			<div class="row">
 				<div class="col-6 px-2">
-					<a href="search.html" class="btn btn-sm btn-outline-warning w-100">
-						<i class="fa fa-fw fa-search"></i> Learn
+					<a href="requests.html" class="btn btn-sm btn-outline-warning w-100">
+						<i class="fa fa-fw fa-list"></i> Teach
 					</a>
 				</div>
 				<div class="col-6 px-2">
@@ -51,7 +51,7 @@
 			</div>
 
 			<div class="py-2" v-if="pastSessions.length">
-				<small class="text-muted border-bottom" id="sessions">COMING SESSIONS</small>
+				<small class="text-muted border-bottom" id="sessions">PAST SESSIONS</small>
 
 				<a href="#" class="row pt-2" v-for="session in pastSessions">
 					<div class="col-3"> {{ session.date }} </div>
@@ -100,7 +100,65 @@
 						</div>
 					</div>
 
-					<!-- TODO: Payment details go here iff. they've got a 'favourite' method -->
+					<!-- TODO: Hook up skill adding / deletion funcs -->
+					<div class="row pt-2" v-if="profile.skills">
+						<form action="javascript:void(0);" @submit="addSkill" class="text-left">
+							<span
+								style="display: none"
+								v-for="(skill, index) in profile.skills"
+								v-show="1"
+								class="text-light btn btn-sm btn-dark mx-1 mb-3"
+								:key="index"
+								:index="index"
+								:skill="skill"
+								@click="deleteSkill(index)">
+
+								<span class="py-1">
+									{{ skill.slice(0,1).toUpperCase() + skill.slice(1) }}
+									<i class="ml-1 fa fa-close"></i>
+								</span>
+							
+							</span>
+							<input
+								ref="skillInput"
+								@input="(ev) => validateSkillInput(ev.target)"
+								class="form-control"
+								type="text"
+								required
+								placeholder="Skill (e.g.: APA 6 referencing)" />
+							<button
+								type="submit"
+								class="btn btn-outline-info w-100 mt-3">Add Skill</button>
+						</form>
+					</div>
+
+					<!-- TODO: Payment details go here -->
+					<div>
+
+						<!-- sub-TODO (see above): Hourly rate for the mentor -->
+						<div class="row pt-2">
+							<div class="col-3">Rate</div>
+							<div class="col-9 text-right">${{ profile.rate }}</div>
+						</div>
+
+						<!-- sub-TODO (see above): Preferred payment for the mentor -->
+						<div class="row pt-2" v-if="hasPayID">
+							<div class="col-3">PayID</div>
+							<div class="col-9 text-right">{{ profile.payid }}</div>
+						</div>
+						<div v-if="!hasPayID">
+							<div class="row pt-2">
+								<div class="col-3">BSB</div>
+								<div class="col-9 text-right">{{ profile.bsb }}</div>
+							</div>
+							<div class="row pt-2">
+								<div class="col-4">Acc No.</div>
+								<div class="col-8 text-right">{{ profile.accountNumber }}</div>
+							</div>
+						</div>
+
+					</div>
+
 				</div>
 			</div>
 
@@ -118,7 +176,9 @@
 				comingSessions: [],
 				pastSessions: [],
 
-				profile: sessionManager.getDataSubset('email', 'name', 'phone'),
+				profile: sessionManager.getDataSubset(
+					'email', 'name', 'phone', 'rate', 'payid', 'bsb', 'accountNumber'
+				),
 
 				states: {
 					viewing: 0,
@@ -140,6 +200,9 @@
 					},
 					isEditing () {
 						return this.state === this.states.editing;
+					},
+					hasPayID () {
+						return this.profile.payid && this.profile.payid.length > 0 || false;
 					}
 				},
 				methods: {
@@ -156,7 +219,7 @@
 					}
 				},
 				mounted () {
-					// TODO: check if session data --> if not, boot to login
+					// TODO: check if there is session data. If not, boot to login screen
 				}
 			});
 		</script>
