@@ -9,7 +9,6 @@
 		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
-		</style>
 
 		<!-- END TEMPLATE -->
 
@@ -45,19 +44,32 @@
 
 			<!-- TODO: Implement loading UI -->
 
-			<a v-for="request in sessionRequests"
-				:href="getRequestURL(request.uid)"
+			<div v-for="request in sessionRequests"
+				href="#"
 				class="row py-2">
 
-				<div class="col-5">
-					{{ relativeTimestamp(request.timestamp) }}
-				</div>
-
-				<div class="col-7">
+				<a href="#" class="col-12" @click="toggleRequestDetails(request)" class="text-primary">
 					{{ request.name }}
-				</div>
+				</a>
 
-			</a>
+				<div v-show="request.isOpen" class="container pl-4">
+					<p class="mb-0">Wants to see you now</p>
+					<p class="mb-0">for 60 mins ($30)</p>
+					<div class="row pt-2">
+						<!-- TODO: Hook up loading indicators for AJAX -->
+						<div class="col-6 pr-2">
+							<button class="btn btn-sm btn-secondary w-100">
+								Reject
+							</button>
+						</div>
+						<div class="col-6 pl-2">
+							<button class="btn btn-sm btn-success w-100">
+								Confirm
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
 
 		</div>
 
@@ -80,6 +92,12 @@
 				el: '#vue-entry',
 				data: pageData,
 				methods: {
+					toggleRequestDetails(request) {
+						let index = this.sessionRequests.indexOf(request);
+						let changedRequest = this.sessionRequests[index];
+						changedRequest.isOpen = !changedRequest.isOpen;
+						this.sessionRequests = this.sessionRequests.concat();
+					},
 					getRequestURL (uid) {
 						return 'session.html?uid=' + uid;
 					},
