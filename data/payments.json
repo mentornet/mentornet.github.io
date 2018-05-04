@@ -1,11 +1,12 @@
 [
   {
-    "uid": 1525406420081,
+    "uid": 1525411187219,
     "email": "tom@joinmentornet.me",
-    "passwd": "$2a$12$oLsw7If9Ut99DQEf.kULQuhJgPqfT.j6nbeQhwmylJZPKvFYzeb7S",
+    "passwd": "$2a$12$qvA6AVu13xMlXeLDQ9lNVutD2bj937TDfB9SPFA8y8iS76hELmDW.",
     "name": "Tom",
-    "phone": "0450797678",
+    "phone": "",
     "payid": "0450797678",
+    "rate": 30,
     "isActive": false,
     "isLoggedIn": true,
     "skills": [
@@ -14,7 +15,6 @@
     "sessions": {
       "current": -1,
       "history": []
-    },
-    "rate": "45"
+    }
   }
 ]
