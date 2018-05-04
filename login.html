@@ -105,7 +105,9 @@
 							.then(response => {
 								this.ajaxLoading = false;
 								sessionManager.setDataFromModel(response.data);
-								successfulAuthRedirect();
+
+								const isMentor = sessionManager.getDataKey('skills').length > 0;
+								successfulAuthRedirect(isMentor ? 'requests.html' : 'search.html');
 							})
 							.catch(handleAxiosError)
 							.then(this.setErrorMessage);
@@ -117,14 +119,14 @@
 				}
 			});
 
-			function successfulAuthRedirect () {
+			function successfulAuthRedirect (redirectPage = 'search.html') {
 				try {
 					let redirIndex = window.location.search.search('=');
 					let redir = window.location.search.slice(redirIndex+1);
 					if (redir.length === 0) throw new Error('No redirect page given');
 					redirect(redir);
 				} catch (err) {
-					redirect('search.html');
+					redirect(redirectPage);
 				}
 			}
 		</script>

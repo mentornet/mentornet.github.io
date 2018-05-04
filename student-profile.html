@@ -61,96 +61,101 @@
 			</div>
 
 			<div id="settings">
-				<!-- TODO: show a loading indicator when updating via AJAX -->
-
-				<!-- TODO: show an editing form when editing -->
-				<div class="py-2" v-show="isEditing">
+				<div class="py-2">
 					<div class="row">
-						<div class="col-6">
+						<div class="col-6" style="height: 26px !important;">
 							<small class="text-muted border-bottom">PROFILE SETTINGS</small>
 						</div>
-						<div class="col-3 px-2">
-							<button @click="confirmEdit()" class="btn btn-sm btn-outline-success py-0 w-100">
-								<i class="fa fa-fw fa-check"></i> 
+						<div class="col-3 px-2" v-show="hasChanges">
+							<button
+								:disabled="ajaxLoading"
+								@click="saveChanges()" class="btn btn-sm btn-outline-success py-0 w-100">
+
+								<i class="fa fa-fw fa-check" v-show="!ajaxLoading"></i> 
+								<i class="fa fa-fw fa-pulse fa-spinner" v-show="ajaxLoading"></i> 
+
 							</button>
 						</div>
-						<div class="col-3 px-2">
-							<button @click="cancelEdit()" class="btn btn-sm btn-outline-danger py-0 w-100">
+						<div class="col-3 px-2" v-show="hasChanges">
+							<button
+								:disabled="ajaxLoading"
+								@click="discardChanges()" class="btn btn-sm btn-outline-danger py-0 w-100">
 								<i class="fa fa-fw fa-times"></i> 
 							</button>
 						</div>
 					</div>
+
+					<div class="row pt-2" v-show="errorMessage.length > 0">
+						<p class="small mb-0 text-center col-12 py-2 bg-danger text-light">
+							{{ errorMessage }}
+						</p>
+					</div>
+
 					<div class="row pt-2">
-						<div class="col-3">
+						<div class="col-3 d-flex flex-column align-items-start justify-content-center">
 							Email
 						</div>
-						<div class="col-9 text-right">
-							{{ profile.email }}
+						<div class="col-9 input-group">
+							<input type="text" class="form-control form-control-sm"
+								:disabled="ajaxLoading"
+								v-model="editedProfile.email" />
 						</div>
 					</div>
 
 					<div class="row pt-2">
-						<div class="col-3">
+						<div class="col-3 d-flex flex-column align-items-start justify-content-center">
 							Name
 						</div>
-						<div class="col-9 text-right">
-							{{ profile.name }}
+						<div class="col-9 input-group">
+							<input type="text" class="form-control form-control-sm"
+								:disabled="ajaxLoading"
+								v-model="editedProfile.name" />
 						</div>
 					</div>
 
 					<div class="row pt-2">
-						<div class="col-4">
-							Phone No.
+						<div class="col-3 d-flex flex-column align-items-start justify-content-center">
+							Ph No.
 						</div>
-						<div class="col-8 text-right">
-							{{ profile.phone }}
+						<div class="col-9 input-group">
+							<input type="text" class="form-control form-control-sm"
+								:disabled="ajaxLoading"
+								v-model="editedProfile.phone" />
 						</div>
 					</div>
 
-					<!-- TODO: Payment details go here -->
+					<div class="row pt-2" v-if="hasPayID">
+						<div class="col-3 d-flex flex-column align-items-start justify-content-center">PayID</div>
+						<div class="col-9 input-group">
+							<input type="text" class="form-control form-control-sm"
+								:disabled="ajaxLoading"
+								v-model="editedProfile.payid" />
+						</div>
+					</div>
+					<div v-if="!hasPayID">
+						<div class="row pt-2">
+							<div class="col-3 d-flex flex-column align-items-start justify-content-center">BSB</div>
+							<div class="col-9 input-group">
+								<!-- TODO: configure to only allow valid BSBs -->
+								<input type="text" class="form-control form-control-sm"
+									:disabled="ajaxLoading"
+									v-model="editedProfile.bsb" />
+							</div>
+						</div>
+						<div class="row pt-2">
+							<div class="col-4 d-flex flex-column align-items-start justify-content-center">Acc No.</div>
+							<div class="col-8 input-group">
+								<!-- TODO: configure to only allow valid account numbers -->
+								<input type="text" class="form-control form-control-sm"
+									:disabled="ajaxLoading"
+									v-model="editedProfile.accountNumber" />
+							</div>
+						</div>
+					</div>
+
+
 				</div>
 
-				<!-- TODO: hide this div when editing -->
-				<div class="py-2" v-show="!isEditing">
-					<div class="row">
-						<div class="col-6">
-							<small class="text-muted border-bottom">PROFILE SETTINGS</small>
-						</div>
-						<div class="col-6 text-right">
-							<button @click="startEdit()" class="btn btn-sm btn-outline-secondary py-0">
-								<i class="fa fa-fw fa-cog"></i> Edit
-							</button>
-						</div>
-					</div>
-					<div class="row pt-2">
-						<div class="col-3">
-							Email
-						</div>
-						<div class="col-9 text-right">
-							{{ profile.email }}
-						</div>
-					</div>
-
-					<div class="row pt-2">
-						<div class="col-3">
-							Name
-						</div>
-						<div class="col-9 text-right">
-							{{ profile.name }}
-						</div>
-					</div>
-
-					<div class="row pt-2" v-if="profile.phone">
-						<div class="col-4">
-							Phone No.
-						</div>
-						<div class="col-8 text-right">
-							{{ profile.phone }}
-						</div>
-					</div>
-
-					<!-- TODO: Payment details go here iff. they've got a 'favourite' method -->
-				</div>
 			</div>
 
 		</div>
@@ -163,21 +168,20 @@
 
 		<!-- Javascript (local) -->
 		<script>
+			const copy = (obj) => Object.assign({}, obj);
+			const initialUserData = sessionManager.getDataSubset(
+					'uid', 'email', 'name', 'phone', 'payid', 'bsb', 'accountNumber'
+			);
+
 			let pageData = {
 				comingSessions: [],
 				pastSessions: [],
 
-				profile: sessionManager.getDataSubset('email', 'name', 'phone'),
+				profile: initialUserData,
+				editedProfile: copy(initialUserData),
 
-				states: {
-					viewing: 0,
-					editing: 1,
-					updating: 2,
-				},
-
-				state: 0
-
-				// TODO: input models for posting the data above
+				ajaxLoading: false,
+				errorMessage: ''
 			};
 
 			let vue = new Vue({
@@ -187,21 +191,44 @@
 					hasSessions () {
 						return this.comingSessions.length || this.pastSessions.length;
 					},
-					isEditing () {
-						return this.state === this.states.editing;
+					hasChanges () {
+						const profileValues = Object.values(this.profile);
+						const editedValues  = Object.values(this.editedProfile);
+						const equivalentValues = profileValues.map((x, i) => x === editedValues[i]);
+						const allEquivalent = equivalentValues.reduce((a,b) => a && b, true);
+						return !allEquivalent;
+					},
+					hasPayID () {
+						return this.profile.payid && this.profile.payid.length > 0 || false;
 					}
 				},
 				methods: {
-					startEdit () {
-						this.state = this.states.editing;
+					saveChanges () {
+						this.ajaxLoading = true;
+
+						const ajaxPackage = this.editedProfile;
+
+						http.put('/user', ajaxPackage)
+							.then(response => {
+								sessionManager.setDataFromModel(response.data);
+								this.profile = response.data;
+								this.editedProfile = copy(response.data);
+								this.ajaxLoading = false;
+							})
+							.catch(error => {
+								handleAxiosError(error);
+								this.showError('Server error: ' + error);
+								this.ajaxLoading = false;
+								this.discardChanges();
+							})
 					},
-					confirmEdit () {
-						this.state = this.states.viewing;
-						// TODO: AJAX request to POST account data to server
+					discardChanges () {
+						this.editedProfile = copy(this.profile);
 					},
-					cancelEdit () {
-						this.state = this.states.viewing;
-						// TODO: reset input models to unedited data
+
+					showError (errorMessage) {
+						this.errorMessage = errorMessage;
+						setTimeout(() => this.errorMessage = '', 5000);
 					}
 				},
 				mounted () {

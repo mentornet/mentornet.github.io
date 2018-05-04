@@ -36,7 +36,7 @@ function handleAxiosError (error) {
 }
 
 const http = axios.create({
-	baseURL: 'http://api.joinmentornet.me:8080/mentornet', //'http://api.joinmentornet.me:8080/mentornet',
+	baseURL: 'http://localhost:8080/mentornet', //'http://api.joinmentornet.me:8080/mentornet',
 	timeout: 3000,
 	withCredentials: true
 });

@@ -215,13 +215,49 @@
 								<button
 									class="btn btn-primary w-100"
 									:disabled="!skills.length"
-									@click="setState(uiStates.mentorPayment1)">Next</button>
+									@click="setState(uiStates.mentorRate)">Next</button>
 							</div>
 						</div>
 					</div>
 
+					<form v-show="uiState === uiStates.mentorRate" @submit="setState(uiStates.mentorPayment1)">
+						<p class="text-center lead text-muted">Step 4: Hourly Rate</p>
+
+						<p class="mb-0">How much do you charge per hour?</p>
+
+						<div class="row pt-2 justify-content-center">
+							<div class="input-group col-4">
+								<div class="input-group-prepend">
+									<span class="input-group-text">$</span>
+								</div>
+								<input
+									v-model="rate"
+									class="form-control"
+									type="tel"
+									inputmode="numeric"
+									pattern="\d+"
+									autocomplete="off"
+									required/>
+							</div>
+						</div>
+
+						<div class="row pt-2">
+							<div class="col-6">
+								<button 
+									type="button"
+									class="btn btn-secondary w-100"
+									@click="setState(uiStates.mentorSkills)">Back</button>
+							</div>
+							<div class="col-6">
+								<button
+									type="submit"
+									:class="nextButtonClass">Next</button>
+							</div>
+						</div>
+					</form>
+
 					<div v-show="uiState === uiStates.mentorPayment1">
-						<p class="text-center lead text-muted">Step 4: Preferred Payment</p>
+						<p class="text-center lead text-muted">Step 5: Preferred Payment</p>
 
 						<p>How would you like to get paid?</p>
 
@@ -229,7 +265,7 @@
 							<div class="col-4">
 								<button 
 									class="btn btn-secondary w-100"
-									@click="setState(uiStates.mentorSkills)">Back</button>
+									@click="setState(uiStates.mentorRate)">Back</button>
 							</div>
 							<div class="col-8">
 								<button
@@ -247,7 +283,7 @@
 					<form action="javascript:void(0)"
 						@submit="payid=''; setState(uiStates.mentorFinish)"
 						v-show="uiState === uiStates.mentorPayment2A">
-						<p class="text-center lead text-muted">Step 4: Preferred Payment</p>
+						<p class="text-center lead text-muted">Step 5: Preferred Payment</p>
 
 						<input
 							v-model="bsb"
@@ -283,8 +319,10 @@
 						</div>
 					</form>
 
-					<div v-show="uiState === uiStates.mentorPayment2B">
-						<p class="text-center lead text-muted">Step 4: Preferred Payment</p>
+					<form v-show="uiState === uiStates.mentorPayment2B"
+						action="javascript:void(0)"
+						@submit="setState(uiStates.mentorFinish)">
+						<p class="text-center lead text-muted">Step 5: Preferred Payment</p>
 
 						<input
 							v-model="payid"
@@ -297,20 +335,21 @@
 						<div class="row mt-3">
 							<div class="col">
 								<button 
+									type="button"
 									class="btn btn-secondary w-100"
 									@click="setState(uiStates.mentorPayment1)">Back</button>
 							</div>
 							<div class="col">
 								<button
 									class="btn btn-primary w-100"
-									:disabled="!payid.length"
-									@click="setState(uiStates.mentorFinish)">Done</button>
+									type="submit"
+									:disabled="!payid.length">Done</button>
 							</div>
 						</div>
-					</div>
+					</form>
 
 					<div v-show="uiState === uiStates.mentorFinish">
-						<p class="text-center lead text-muted">Step 5: Get Started</p>
+						<p class="text-center lead text-muted">Step 6: Get Started</p>
 						<p>All set! Check your info:</p>
 
 						<table class="w-100 text-left">
@@ -333,6 +372,10 @@
 							<tr class="pt-2">
 								<th>Skills</th>
 								<td class="text-right">{{ skills.length > 1 ? skills.join(', ') : skills[0] }}</td>
+							</tr>
+							<tr class="pt-2">
+								<th>Rate</th>
+								<td class="text-right">${{ rate }} / hour</td>
 							</tr>
 							<tr v-if="payid.length" class="pt-2">
 								<th>PayID</th>
@@ -379,6 +422,7 @@
 				phone: '',
 
 				skills: [],
+				rate: 30,
 
 				payid: '',
 				bsb: '',
@@ -396,6 +440,7 @@
 					studentFinish: 3,
 
 					mentorSkills: 4,
+					mentorRate: 9, 
 					mentorPayment1: 5,
 					mentorPayment2A: 6,
 					mentorPayment2B: 7,
@@ -457,6 +502,9 @@
 							name: this.name,
 							phone: this.phone.split('').filter(c => c !== ' ').join(''),
 
+							skills: this.skills,
+							rate: this.rate,
+
 							payid: this.payid,
 							bsb: this.bsb,
 							accountNumber: this.accountNumber
@@ -466,7 +514,9 @@
 							.then(response => {
 								sessionStorage.removeItem('signupDetails');
 								sessionManager.setDataFromModel(response.data);
-								authRedirect();
+
+								const isMentor = ajaxPackage.skills.length > 0;
+								redirect(isMentor ? 'requests.html' : 'search.html');
 							})
 							.catch(handleAxiosError)
 							.then(this.setErrorMessage);
@@ -476,10 +526,6 @@
 					}
 				}
 			});
-
-			function authRedirect () {
-				redirect('mentor-list.html');
-			}
 
 			if (sessionStorage.getItem('signupDetails')) {
 				vue.buildSignupDetails(JSON.parse(sessionStorage.getItem('signupDetails')));

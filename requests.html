@@ -47,7 +47,7 @@
 
 			<a v-for="request in sessionRequests"
 				:href="getRequestURL(request.uid)"
-				class="row border-top py-2">
+				class="row py-2">
 
 				<div class="col-5">
 					{{ relativeTimestamp(request.timestamp) }}
@@ -72,7 +72,7 @@
 			let pageData = {
 				sessionRequests: [
 					// Example
-					{ timestamp: Date.now()-(1000*60*18), name: 'Abdul Jamar', uid: -1 }
+					{ timestamp: Date.now()-(1000*60*18), name: 'Example', uid: -1 }
 				]
 			};
 
@@ -81,7 +81,7 @@
 				data: pageData,
 				methods: {
 					getRequestURL (uid) {
-						return '/session.html?uid=' + uid;
+						return 'session.html?uid=' + uid;
 					},
 					relativeTimestamp (rawTimestamp) {
 						let now = Date.now();

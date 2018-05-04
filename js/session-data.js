@@ -12,7 +12,10 @@ const sessionManager = new (function () {
 		'comingSessions',
 
 		'skills',
-		'isActive'
+		'isActive',
+		'rate',
+
+		'payid'
 	];
 
 	let data = {};
