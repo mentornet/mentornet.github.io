@@ -1,77 +1,20 @@
 [
   {
-    "uid": 1524397206555,
-    "payid": "0450797678",
-    "passwd": "$2a$12$6vreoB5TFVCv58hrzRVm3ep6f4fe.TpxVnyYu9PMR/Eh5/kdRhS9i",
+    "uid": 1525406420081,
+    "email": "tom@joinmentornet.me",
+    "passwd": "$2a$12$oLsw7If9Ut99DQEf.kULQuhJgPqfT.j6nbeQhwmylJZPKvFYzeb7S",
     "name": "Tom",
     "phone": "0450797678",
-    "isActive": true,
+    "payid": "0450797678",
+    "isActive": false,
+    "isLoggedIn": true,
     "skills": [
-      "How to use Mentor Net"
+      "Using Mentor Net"
     ],
     "sessions": {
       "current": -1,
       "history": []
     },
-    "isLoggedIn": false
-  },
-  {
-    "uid": 1524397372401,
-    "payid": "Keko",
-    "passwd": "$2a$12$MkcPIRROU./8Om9jPUsmd.iQUgKPhDFSLCgWWRs7FzN6GLFAX0DY6",
-    "name": "Brah",
-    "phone": "0432183382",
-    "isActive": true,
-    "skills": [
-      "Being Based"
-    ],
-    "sessions": {
-      "current": -1,
-      "history": []
-    },
-    "isLoggedIn": true
-  },
-  {
-    "uid": 1525256775354,
-    "payid": "",
-    "passwd": "$2a$12$lONNX5Bql.PTxMHr/UbD9eQOObwMHPdhJ9PUfC6XumEC.iAr8SyIy",
-    "name": "Tom",
-    "phone": "",
-    "isActive": false,
-    "isLoggedIn": true,
-    "skills": [],
-    "sessions": {
-      "current": -1,
-      "history": []
-    }
-  },
-  {
-    "uid": 1525256941748,
-    "payid": "",
-    "passwd": "$2a$12$7KurUISZ1sgkOvLMgSh70.Amu/KmKdkltJ4J5HExk8qrSMLmA3nAO",
-    "name": "Tom",
-    "phone": "",
-    "isActive": false,
-    "isLoggedIn": true,
-    "skills": [],
-    "sessions": {
-      "current": -1,
-      "history": []
-    }
-  },
-  {
-    "uid": 1525257127214,
-    "email": "tom@joinmentornet.me",
-    "passwd": "$2a$12$UWQdenTRd8RrtHFuikER5eu2A8OkP.Fy7kuzby6zPDrgoi34Ypm.6",
-    "name": "Tom",
-    "phone": "",
-    "payid": "",
-    "isActive": false,
-    "isLoggedIn": true,
-    "skills": [],
-    "sessions": {
-      "current": -1,
-      "history": []
-    }
+    "rate": "45"
   }
 ]

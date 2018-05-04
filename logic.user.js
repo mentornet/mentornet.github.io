@@ -70,7 +70,7 @@ module.exports = {
 	},
 	create: async function create (userCreationData) {
 		// 1. Validate given text input
-		const { name, passwd, email, phone, payid } = userCreationData;
+		const { name, passwd, email, phone, payid, skills, rate } = userCreationData;
 
 		if (!email || email.length == 0)
 			throw { statusCode: 406, message: 'Give an email to sign up.' }
@@ -89,10 +89,12 @@ module.exports = {
 			phone,
 
 			payid,
+			rate,
 
 			isActive: false,
 			isLoggedIn: true,
-			skills: [],
+
+			skills,
 
 			sessions: {
 				current: -1,

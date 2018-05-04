@@ -16,13 +16,13 @@ module.exports = {
 			const users = await dataUtils.readDB(dbPath);
 			const mentors = users.filter(user => {
 				return user.skills.length
-					&& user.isActive
 					&& user.isLoggedIn
 					&& user.uid !== callingUID
 			});
 			const publicData = mentors.map(user => ({
 				uid: user.uid,
-				name: user.name
+				name: user.name,
+				skills: user.skills
 				// Can always change later e.g.: what if we need their phone #?
 			}));
 			return publicData;
