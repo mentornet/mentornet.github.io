@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- <HEAD> TEMPLATE -->
+		<!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
+		</style>
+
+		<!-- END TEMPLATE -->
+
+		<title>Mentor Net</title>
+	</head>
+	<body>
+
+		<header class="container pt-2 pb-2 bg-dark text-light">
+			<h4 class="row mb-0">
+				<a href="search.html" class="col-6 px-2 text-light">Mentor Net</a>
+				<small class="text-right col px-2 mt-1">Mentor Profile</small>
+			</h4>
+		</header>
+
+		<div id="vue-entry" class="container">
+
+			<div class="row py-2 border-bottom">
+				<div class="col lead d-flex align-items-center">
+					{{ mentor.name }}
+				</div>
+				<div class="col text-right">
+					<button @click="gotoSessions()" class="btn btn-sm btn-primary">Book Now <i class="ml-1 fa fa-chevron-down"></i> </button>
+				</div>
+			</div>
+
+			<div class="row pt-2">
+				<div class="col-4">
+					<small class="text-muted">UNITS</small>
+					<p class="mb-0" v-for="unit in mentor.units"> {{ unit }} </p>
+				</div>
+
+				<div class="col">
+					<small class="text-muted ">SKILLS</small>
+					<p class="mb-0" v-for="skill in mentor.skills"> {{ skill }} </p>
+				</div>
+			</div>
+
+			<div class="mt-2 row justify-content-center bg-dark text-light">
+				<div class="col-6">
+
+					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
+						<small>Tutoring for</small>
+						<p class="mb-0 lead">2 years</p>
+					</div>
+
+				</div>
+
+				<div class="col-6">
+					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
+						<small>Students achieve</small>
+						<p class="mb-0 lead">80% - 85%</p>
+						<small>on average</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="row pt-2" id="sessions">
+				<div class="col-9">
+					<small class="text-muted">SESSIONS</small>
+				</div>
+				<div class="col-3">
+					<small class="text-muted">$20/hr</small>
+				</div>
+			</div>
+
+			<div class="pt-2 pl-3" v-for="day in mentor.days">
+				<a href="#" class="row">
+					<div class="col-9">
+						<p class="mb-2"> {{ day.text }} </p>
+					</div>
+					<div class="col-3 text-center">
+						<small class="pb-1 fa fa-chevron-right"></small>
+					</div>
+				</a>
+
+				<div class="row justify-content-around align-items-center py-1">
+					<div class="col-4">
+						<small>Start at </small>
+					</div>
+					<div class="col-6">
+						<select class="w-100 custom-select custom-select-sm"></select>
+					</div>
+				</div>
+
+				<div class="row justify-content-around align-items-center py-1">
+					<div class="col-4">
+						<small>Finish at </small>
+					</div>
+					<div class="col-6">
+						<select class="w-100 custom-select custom-select-sm"></select>
+					</div>
+				</div>
+
+				<div class="row justify-content-around align-items-center py-1">
+					<div class="col-4">
+						<small>Total time: </small>
+					</div>
+					<div class="col-6">
+						<p class="mb-0">abcd</p>  
+					</div>
+				</div>
+
+				<div class="px-2">
+					<button class="w-100 btn btn-sm btn-primary mt-1">Confirm Booking</button>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Javascript (global) -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./js/generics.js"></script>
+		<script src="./js/session-data.js"></script>
+
+		<!-- Javascript (local) -->
+		<script>
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: {
+					mentor: {
+						name: 'Nessa',
+						units: [
+							'PSY3041',
+							'PSY3051',
+							'PSY3062',
+							'PSY3932',
+						],
+						skills: [
+							'Report / Essay Writing',
+							'Critical Thinking',
+							'Psychology Pathways',
+							'Practical Skills',
+							'Lecture Materials',
+						],
+						days: [
+							{ text: 'monday', start: 13, end: 18 },
+							{ text: 'friday', start: 13, end: 18 },
+						],
+					}
+				},
+				methods: {
+					gotoSessions() {
+						document.querySelector('#sessions').scrollIntoView({
+							behavior: 'smooth'
+						});
+					}
+				}
+			});
+		</script>
+
+		<script type="x/template" id="booking-template">
+			<div class="pt-2 pl-3">
+				<a href="#" @click="toggleVisibility()">
+					<small class="text-muted"> {{ day.text }} </small>
+				</a>
+
+				<div v-show="isVisible">
+					<div class="form-group">
+					</div>
+				</div>
+			</div>
+		</script>
+
+	</body>
+</html>
