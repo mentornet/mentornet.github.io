@@ -19,14 +19,14 @@
 
 		<header class="container pt-2 pb-2 bg-dark text-light">
 			<h4 class="row mb-0">
-				<a href="search.html" class="col-6 px-2 text-light">Mentor Net</a>
+				<a href="#" class="col-6 px-2 text-light">Mentor Net</a>
 				<small class="text-right col px-2 mt-1">Mentor Profile</small>
 			</h4>
 		</header>
 
 		<div id="vue-entry" class="container">
 
-			<div class="row py-2 border-bottom">
+			<div class="row py-2 bg-dark text-light border-bottom">
 				<div class="col lead d-flex align-items-center">
 					{{ mentor.name }}
 				</div>
@@ -47,7 +47,7 @@
 				</div>
 			</div>
 
-			<div class="mt-2 row justify-content-center bg-dark text-light">
+			<div class="mt-2 px-4 row justify-content-center bg-dark text-light">
 				<div class="col-6">
 
 					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
@@ -70,52 +70,16 @@
 				<div class="col-9">
 					<small class="text-muted">SESSIONS</small>
 				</div>
-				<div class="col-3">
-					<small class="text-muted">$20/hr</small>
+				<div class="col-3 text-right">
+					<small class="text-muted">$20/hour</small>
 				</div>
 			</div>
 
-			<div class="pt-2 pl-3" v-for="day in mentor.days">
-				<a href="#" class="row">
-					<div class="col-9">
-						<p class="mb-2"> {{ day.text }} </p>
-					</div>
-					<div class="col-3 text-center">
-						<small class="pb-1 fa fa-chevron-right"></small>
-					</div>
-				</a>
-
-				<div class="row justify-content-around align-items-center py-1">
-					<div class="col-4">
-						<small>Start at </small>
-					</div>
-					<div class="col-6">
-						<select class="w-100 custom-select custom-select-sm"></select>
-					</div>
-				</div>
-
-				<div class="row justify-content-around align-items-center py-1">
-					<div class="col-4">
-						<small>Finish at </small>
-					</div>
-					<div class="col-6">
-						<select class="w-100 custom-select custom-select-sm"></select>
-					</div>
-				</div>
-
-				<div class="row justify-content-around align-items-center py-1">
-					<div class="col-4">
-						<small>Total time: </small>
-					</div>
-					<div class="col-6">
-						<p class="mb-0">abcd</p>  
-					</div>
-				</div>
-
-				<div class="px-2">
-					<button class="w-100 btn btn-sm btn-primary mt-1">Confirm Booking</button>
-				</div>
-			</div>
+			<booking v-for="(date, index) in mentor.dates"
+				:text="date.text"
+				:times="date.times"
+				:time-is-disabled="[]"
+				:key="index"></booking>
 
 		</div>
 
@@ -126,6 +90,7 @@
 		<script src="./js/session-data.js"></script>
 
 		<!-- Javascript (local) -->
+		<script src="./booking.vue.js"></script>
 		<script>
 			let vue = new Vue({
 				el: '#vue-entry',
@@ -145,9 +110,10 @@
 							'Practical Skills',
 							'Lecture Materials',
 						],
-						days: [
-							{ text: 'monday', start: 13, end: 18 },
-							{ text: 'friday', start: 13, end: 18 },
+						dates: [
+							{ text: 'Fri 18 May', times: getValues(13, 18, 0.25) },
+							{ text: 'Mon 21 May', times: getValues(13, 18, 0.25) },
+							{ text: 'Fri 1 Jun', times: getValues(13, 18, 0.25) }
 						],
 					}
 				},
@@ -159,20 +125,19 @@
 					}
 				}
 			});
+
+			function getValues (start, end, interval) {
+				const diff = end - start;
+				const count = diff / interval;
+
+				let arr = new Array(count + 1);
+				for (var i = 0; i < arr.length; i++)
+					arr[i] = start + interval * i;
+
+				return arr;
+			}
 		</script>
 
-		<script type="x/template" id="booking-template">
-			<div class="pt-2 pl-3">
-				<a href="#" @click="toggleVisibility()">
-					<small class="text-muted"> {{ day.text }} </small>
-				</a>
-
-				<div v-show="isVisible">
-					<div class="form-group">
-					</div>
-				</div>
-			</div>
-		</script>
 
 	</body>
 </html>
