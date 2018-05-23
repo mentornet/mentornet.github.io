@@ -36,7 +36,7 @@
 			</div>
 
 			<div class="row pt-2">
-				<div class="col-4">
+				<div class="col-4" v-if="mentor.units">
 					<small class="text-muted">UNITS</small>
 					<p class="mb-0" v-for="unit in mentor.units"> {{ unit }} </p>
 				</div>
@@ -47,25 +47,43 @@
 				</div>
 			</div>
 
+
 			<div class="mt-2 px-4 row justify-content-center bg-dark text-light">
 				<div class="col-6">
 
 					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
-						<small>Tutoring for</small>
-						<p class="mb-0 lead">2 years</p>
+						<small>Singing for</small>
+						<p class="mb-0 lead">12 years</p>
 					</div>
 
 				</div>
 
-				<div class="col-6">
+				<div class="col-6 text-center">
 					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
-						<small>Students achieve</small>
-						<p class="mb-0 lead">80% - 85%</p>
-						<small>on average</small>
+						<small>Ranked</small>
+						<p class="mb-0 lead">3rd Place</p>
+						<small>in Sing Melb 2017</small>
 					</div>
 				</div>
 			</div>
 
+			<div class="px-4 row justify-content-center bg-dark text-light">
+				<div class="col-6 text-center">
+					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
+						<small>Certificate </small>
+						<p class="mb-0 lead">Level 7</p>
+						<small>in Chinese folk singing for adults</small>
+					</div>
+				</div>
+
+				<div class="col-6 text-center">
+					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
+						<small>Certificate </small>
+						<p class="mb-0 lead">Level 9</p>
+						<small>in Chinese folk singing for youths</small>
+					</div>
+				</div>
+			</div>
 			<div class="row pt-2" id="sessions">
 				<div class="col-9">
 					<small class="text-muted">SESSIONS</small>
@@ -98,23 +116,18 @@
 				data: {
 					mentor: {
 						fee: 20,
-						name: 'Nessa',
-						units: [
-							'PSY3041',
-							'PSY3051',
-							'PSY3062',
-							'PSY3932',
-						],
+						name: 'Yi Qu',
 						skills: [
-							'Report / Essay Writing',
-							'Critical Thinking',
-							'Psychology Pathways',
-							'Practical Skills',
-							'Lecture Materials',
+							'Vocal Coaching',
+							'Musical Theatre',
+							'Rock and Basic Heavy Metal Singing'
 						],
 						availabilities: {
-							1: { from: 13, to: 18, interval: 0.5 },
-							5: { from: 13, to: 18, interval: 0.5 }
+							1: { from: 14, to: 17.5, interval: 0.5 },
+							2: { from: 14, to: 17.5, interval: 0.5 },
+							3: { from: 14, to: 17.5, interval: 0.5 },
+							4: { from: 14, to: 17.5, interval: 0.5 },
+							5: { from: 14, to: 17.5, interval: 0.5 }
 						}
 					}
 				},

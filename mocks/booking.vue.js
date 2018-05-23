@@ -3,7 +3,7 @@ const booking = Vue.component('booking', {
 		<div class="py-2 pl-3">
 			<a href="#" class="row" @click="(event) => {toggleVisibility(); event.preventDefault()}">
 				<div class="col-9">
-					<p class="mb-2"> {{ text }} </p>
+					<p class="mb-2"> {{ dateText }} </p>
 				</div>
 				<div class="col-3 text-center">
 					<small v-show="!isVisible" class="pb-1 fa fa-chevron-right"></small>
@@ -17,7 +17,7 @@ const booking = Vue.component('booking', {
 						<small>Start at </small>
 					</div>
 					<div class="col-6">
-						<select ref="start" @change="updateEndTime" class="w-100 custom-select custom-select-sm"></select>
+						<select ref="start" @input="updateEndTime" class="w-100 custom-select custom-select-sm"></select>
 					</div>
 				</div>
 
@@ -35,7 +35,7 @@ const booking = Vue.component('booking', {
 						<small>Total time</small>
 					</div>
 					<div class="col-6">
-					<p class="text-right mb-0"> {{ length }} </p>  
+					<p class="text-right mb-0"> {{ formatElapsedTime(length) }} </p>  
 					</div>
 				</div>
 
@@ -45,17 +45,28 @@ const booking = Vue.component('booking', {
 				</div>
 
 				<div class="px-2 mt-1">
-					<button :disabled="!length.length" class="w-100 btn btn-sm btn-primary mt-1">Confirm Booking</button>
+					<button
+					@click="confirmBooking"
+					:disabled="!length"
+					class="w-100 btn btn-sm btn-primary mt-1">Confirm Booking</button>
 				</div>
 			</div>
 		</div>
 	`,
-	props: [ 'text', 'times', 'timeIsDisabled' ],
+	props: [ 'date', 'times', 'disabledTimes' ],
 	data () {
 		return {
 			isVisible: false,
 			length: ''
 		};
+	},
+	computed: {
+		dateText () {
+			return this.date.toDateString().slice(0,-5);
+		},
+		timeInterval () {
+			return this.times[1] - this.times[0];
+		}
 	},
 	methods: {
 		toggleVisibility () {
@@ -94,7 +105,7 @@ const booking = Vue.component('booking', {
 			const chosenStartTime = Number(start.value);
 			const endTime = this.times[this.times.length-1];
 
-			const endTimes = this.getValues(chosenStartTime, endTime).slice(4);
+			const endTimes = this.getValues(chosenStartTime, endTime, this.timeInterval).slice(1);
 
 			end.disabled = false;
 
@@ -117,7 +128,7 @@ const booking = Vue.component('booking', {
 		updateElapsedTime () {
 			const diffTime = this.$refs.end.value - this.$refs.start.value;
 
-			this.length = this.formatElapsedTime(diffTime);
+			this.length = diffTime;
 		},
 		getValues (start, end, interval = 0.25) {
 			const diff = end - start;
@@ -128,16 +139,21 @@ const booking = Vue.component('booking', {
 				arr[i] = start + interval * i;
 
 			return arr;
+		},
+
+		confirmBooking () {
+			this.$emit('confirm-booking', this.$refs.start.value, this.length);
 		}
 	},
 	mounted () {
 		// Populate times
-		this.times.slice(0,-4).forEach((time, index) => {
+		const interval = this.times[1] - this.times[0];
+		this.times.slice(0,-1).forEach((time, index) => {
 			this.addOption(
 				this.$refs.start,
 				this.formatHourString(time),
 				time,
-				this.timeIsDisabled[index] || false
+				this.disabledTimes.indexOf(time) !== -1
 			);
 		});
 
