@@ -1,10 +1,21 @@
 {
-    "scripts": {
-        "push": "git add -A && git commit -m \"Update\" && git push"
-    },
-    "dependencies": {
-        "bootstrap": "4.0.0",
-        "font-awesome": "4.7.0",
-        "simple-line-icons": "2.4.1"
-    }
+  "name": "mentornet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "devDependencies": {},
+	"nodemonConfig": {
+		"ignore": [ "data/*" ],
+		"delay": "1000"
+	},
+  "author": "",
+  "license": "ISC",
+	"scripts": {
+			"push": "git add -A && git commit -m \"Update\" && git push -u origin master"
+	},
+	"dependencies": {
+			"bootstrap": "4.0.0",
+			"font-awesome": "4.7.0",
+			"simple-line-icons": "2.4.1"
+	}
 }

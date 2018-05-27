@@ -1,0 +1,39 @@
+{
+  "name": "Yi Qu",
+  "fee": 20,
+  "skills": [
+    "Vocal Coaching",
+    "Mandarin",
+    "Musical Theatre",
+    "Rock and Basic Heavy Metal Singing"
+  ],
+  "interval": 0.5,
+  "availabilities": {
+    "1": {
+      "from": 14,
+      "to": 17.5,
+      "interval": 0.5
+    },
+    "2": {
+      "from": 14,
+      "to": 17.5,
+      "interval": 0.5
+    },
+    "3": {
+      "from": 14,
+      "to": 17.5,
+      "interval": 0.5
+    },
+    "4": {
+      "from": 14,
+      "to": 17.5,
+      "interval": 0.5
+    },
+    "5": {
+      "from": 14,
+      "to": 17.5,
+      "interval": 0.5
+    }
+  },
+  "uid": 1
+}
