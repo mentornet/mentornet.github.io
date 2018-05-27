@@ -26,6 +26,13 @@ const exampleData = {
 const sessionManager = new (function () {
 	let sessions = [];
 
+	const getSessionByUID = (uid) => {
+		const index = sessions.map(entry => entry.uid).indexOf(uid);
+		if (index === -1)
+			throw new Error('No session exists with UID ' + uid);
+		return sessions[index];
+	};
+
 	// Read files in sessions directory
 	const sessionsDir = __dirname + '/sessions/';
 	const sessionFilePaths = fs.readdirSync(sessionsDir)
@@ -40,6 +47,10 @@ const sessionManager = new (function () {
 		);
 	});
 
+	this.getAllSessions = () => {
+		return sessions;
+	};
+
 	this.sessionStates = {
 		// Prefixed with 's' or 'm' to denote student or mentor
 		sRequested: 0,
@@ -52,9 +63,10 @@ const sessionManager = new (function () {
 	};
 
 	this.setSessionState = function (sessionUID, state) {
-		sessions[sessionUID].state = state;
+		let session = getSessionByUID(sessionUID);
+		session.state = state;
 
-		utils.savePDO(__dirname + '/sessions/' + sessionUID + '.json', sessions[sessionUID]);
+		utils.savePDO(__dirname + '/sessions/' + sessionUID + '.json', session);
 	};
 
 	this.createSession = function (
@@ -75,9 +87,11 @@ const sessionManager = new (function () {
 			}
 		};
 
-		const index = sessions.push(session) - 1;
+		const index = (sessions.reduce((a,b) => a.uid > b.uid ? a.uid : b.uid, 0)) + 1;
 
 		session.uid = index;
+
+		sessions.push(session);
 
 		this.setSessionState(index, this.sessionStates.sRequested);
 
@@ -85,7 +99,7 @@ const sessionManager = new (function () {
 	};
 
 	this.getMentorView = function (sessionUID) {
-		const session = sessions[sessionUID];
+		const session = getSessionByUID(sessionUID);
 		return {
 			uid: session.uid,
 			student: {
@@ -97,7 +111,7 @@ const sessionManager = new (function () {
 	};
 
 	this.getStudentView = function (sessionUID) {
-		const session = sessions[sessionUID];
+		const session = getSessionByUID(sessionUID);
 
 		return {
 			uid: session.uid,
@@ -114,7 +128,7 @@ const sessionManager = new (function () {
 		if (sessions.length <= uid)
 			throw new Error('No session with that UID exists');
 
-		const session = sessions[uid];
+		const session = getSessionByUID(sessionUID);
 
 		if (viewToken === session.viewTokens.student) {
 			// TODO: update student view token

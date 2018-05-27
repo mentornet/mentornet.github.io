@@ -19,14 +19,14 @@ server.use(helmet.noCache()); // Remove in production. Maybe
 
 server.use(session({
 	secret: utils.getRandomHash(),
-	cookie: { domain: 'localhost' }
+	cookie: { domain: 'joinmentornet.me' }
 }));
 
 server.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "http://joinmentornet.me");
 	res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
 	res.header("Access-Control-Allow-Credentials", "true");
-	res.header("Access-Control-Allow-Headers", "Content-Type");
+	res.header("Access-Control-Allow-Headers", "Content-Type,Cache-Control");
 	console.log(req.session);
 	next();
 });

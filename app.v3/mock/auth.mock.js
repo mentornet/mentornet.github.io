@@ -94,6 +94,28 @@ server.post('/session', async function(req, res) {
 
 });
 
+server.get('/admin/abcde', async function (req, res) {
+
+	const allSessions = sessionManager.getAllSessions().map(
+		entry => ({
+			mentor: entry.mentor.uid,
+			student: entry.student,
+			date: (new Date(entry.booking.date)).toDateString(),
+			startTime: entry.booking.startTime,
+			length: entry.booking.length,
+			fee: entry.booking.fee
+		})
+	);
+
+	res.send(
+		JSON.stringify(
+			allSessions,
+			null,
+			2
+		).split('\n').join('<br/>')
+	);
+});
+
 server.listen(8080);
 
 function getViewToken () {

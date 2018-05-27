@@ -13,14 +13,14 @@
   },
   "booking": {
     "date": 1527429600000,
-    "startTime": 15.5,
-    "length": 2,
-    "fee": 40
+    "startTime": 15,
+    "length": 0.5,
+    "fee": 10
   },
   "viewTokens": {
-    "mentor": "$2a$12$gKrEyNgKw",
-    "student": "$2a$12$3CxRKPxEh"
+    "mentor": "$2a$12$v7uOuzGMG",
+    "student": "$2a$12$kBaCWr4pY"
   },
-  "uid": 0,
+  "uid": 2,
   "state": 2
 }
