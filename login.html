@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- <HEAD> TEMPLATE -->
+		<!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
+		<style>
+			a:hover {
+				text-decoration: none;
+			}
+		</style>
+
+		<!-- END TEMPLATE -->
+
+		<title>Mentor Net - Log In</title>
+	</head>
+	<body style="height: 100vh">
+
+		<header class="container pt-2 pb-2 bg-dark text-light">
+			<h4 class="row mb-0">
+				<a href="index.html" class="text-light col-6 px-2">Mentor Net</a>
+				<small class="text-right col px-2 mt-1">Log In</small>
+			</h4>
+		</header>
+
+		<div id="vue-entry" class="container" style="display:none" v-show="true">
+
+			<form action="javascript:void(0);" @submit="login">
+				<div class="mt-2">
+					<small>Email</small>
+					<input
+						v-model="email"
+						class="form-control"
+						type="email"
+						autocomplete="off"
+						placeholder="Email"
+						:disabled="ajaxLoading"
+						required/>
+				</div>
+				
+				<div class="mt-2 ">
+					<small>Password</small>
+					<input
+						v-model="passwd"
+						class="form-control"
+						type="password"
+						autocomplete="off"
+						placeholder="Password"
+						:disabled="ajaxLoading"
+						required/>
+				</div>
+
+				<div class="mt-2 pt-2">
+					<button
+						v-show="!ajaxLoading"
+						:disabled="!email.length || !passwd.length"
+						type="submit"
+						class="btn btn-primary w-100">Log In</button>
+
+					<button
+						v-show="ajaxLoading"
+						type="submit"
+						class="btn btn-primary w-100" disabled>
+						<i class="fa fa-pulse fa-spinner"></i>
+					</button>
+
+					<p v-show="errorMessage.length && !ajaxLoading"
+						class="text-center pt-2 text-danger small"> Error: {{ errorMessage }} </p>
+				</div>
+			</form>
+		</div>
+
+		<!-- Javascript (global) -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./js/generics.js"></script>
+		<script src="./js/session-data.js"></script>
+
+		<!-- Javascript (local) -->
+		<script>
+			sessionManager.getSessionData()
+				.then(successfulAuthRedirect)
+				.catch(handleAxiosError);
+
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: {
+					email: '',
+					passwd: '',
+
+					ajaxLoading: false,
+					errorMessage: ''
+				},
+				methods: {
+					login () {
+						this.setErrorMessage('');
+						this.ajaxLoading = true;
+						const jsonPackage = { email: this.email, passwd: this.passwd };
+						http.post('/auth', jsonPackage)
+							.then(response => {
+								this.ajaxLoading = false;
+								sessionManager.setDataFromModel(response.data);
+
+								const isMentor = sessionManager.getDataKey('skills').length > 0;
+								successfulAuthRedirect(isMentor ? 'requests.html' : 'search.html');
+							})
+							.catch(handleAxiosError)
+							.then(this.setErrorMessage);
+					},
+					setErrorMessage(msg) {
+						this.errorMessage = msg;
+						this.ajaxLoading = false;
+					}
+				}
+			});
+
+			function successfulAuthRedirect (redirectPage = 'search.html') {
+				try {
+					let redirIndex = window.location.search.search('=');
+					let redir = window.location.search.slice(redirIndex+1);
+					if (redir.length === 0) throw new Error('No redirect page given');
+					redirect(redir);
+				} catch (err) {
+					redirect(redirectPage);
+				}
+			}
+		</script>
+	</body>
+</html>

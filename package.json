@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "mentornet",
   "version": "1.0.0",
   "description": "",
@@ -26,4 +27,14 @@
 	},
   "author": "",
   "license": "ISC"
+=======
+    "scripts": {
+        "push": "git add -A && git commit -m \"Update\" && git push"
+    },
+    "dependencies": {
+        "bootstrap": "4.0.0",
+        "font-awesome": "4.7.0",
+        "simple-line-icons": "2.4.1"
+    }
+>>>>>>> c872e11e23d79f00b811dadcde6fa2e66c510a8b
 }

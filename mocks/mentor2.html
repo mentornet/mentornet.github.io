@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- <HEAD> TEMPLATE -->
+		<!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
+		</style>
+
+		<!-- END TEMPLATE -->
+
+		<title>Mentor Net</title>
+	</head>
+	<body>
+
+		<header class="container pt-2 pb-2 bg-dark text-light">
+			<h4 class="row mb-0">
+				<a href="#" class="col-6 px-2 text-light">Mentor Net</a>
+				<small class="text-right col px-2 mt-1">Mentor Profile</small>
+			</h4>
+		</header>
+
+		<div id="vue-entry" class="container">
+
+			<div class="row py-2 bg-dark text-light border-bottom">
+				<div class="col lead d-flex align-items-center">
+					{{ mentor.name }}
+				</div>
+				<div class="col text-right">
+					<button @click="gotoSessions()" class="btn btn-sm btn-primary">Book Now <i class="ml-1 fa fa-chevron-down"></i> </button>
+				</div>
+			</div>
+
+			<div class="row pt-2">
+				<div class="col-4" v-if="mentor.units">
+					<small class="text-muted">UNITS</small>
+					<p class="mb-0" v-for="unit in mentor.units"> {{ unit }} </p>
+				</div>
+
+				<div class="col">
+					<small class="text-muted ">SKILLS</small>
+					<p class="mb-0" v-for="skill in mentor.skills"> {{ skill }} </p>
+				</div>
+			</div>
+
+
+			<div class="mt-2 px-4 row justify-content-center bg-dark text-light">
+				<div class="col-6">
+
+					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
+						<small>Singing for</small>
+						<p class="mb-0 lead">12 years</p>
+					</div>
+
+				</div>
+
+				<div class="col-6 text-center">
+					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
+						<small>Ranked</small>
+						<p class="mb-0 lead">3rd Place</p>
+						<small>in Sing Melb 2017</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="px-4 row justify-content-center bg-dark text-light">
+				<div class="col-6 text-center">
+					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
+						<small>Certificate </small>
+						<p class="mb-0 lead">Level 7</p>
+						<small>in Chinese folk singing for adults</small>
+					</div>
+				</div>
+
+				<div class="col-6 text-center">
+					<div class="py-2 bg-dark text-light h-100 d-flex flex-column align-items-center justify-content-center">
+						<small>Certificate </small>
+						<p class="mb-0 lead">Level 9</p>
+						<small>in Chinese folk singing for youths</small>
+					</div>
+				</div>
+			</div>
+			<div class="row pt-2" id="sessions">
+				<div class="col-9">
+					<small class="text-muted">SESSIONS</small>
+				</div>
+				<div class="col-3 text-right">
+					<small class="text-muted">$20/hour</small>
+				</div>
+			</div>
+
+			<booking v-for="(date, index) in mentor.dates"
+				@confirm-booking="(startTime, length) => confirmBooking(date.date, startTime, length)"
+				:date="date.date"
+				:times="date.times"
+				:blocked-times="getMentorBlockedTimes(date.date)"
+				:key="index"></booking>
+
+		</div>
+
+		<!-- Javascript (global) -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="../js/generics.js"></script>
+
+		<!-- Javascript (local) -->
+		<script src="./booking.data.js"></script>
+		<script src="./booking.vue.js"></script>
+
+		<script>
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: {
+					mentor: {
+						fee: 20,
+						name: 'Yi Qu',
+						skills: [
+							'Vocal Coaching',
+							'Musical Theatre',
+							'Rock and Basic Heavy Metal Singing'
+						],
+						availabilities: {
+							1: { from: 14, to: 17.5, interval: 0.5 },
+							2: { from: 14, to: 17.5, interval: 0.5 },
+							3: { from: 14, to: 17.5, interval: 0.5 },
+							4: { from: 14, to: 17.5, interval: 0.5 },
+							5: { from: 14, to: 17.5, interval: 0.5 }
+						}
+					}
+				},
+				methods: {
+					gotoSessions() {
+						document.querySelector('#sessions').scrollIntoView({
+							behavior: 'smooth'
+						});
+					},
+
+					getMentorBlockedTimes (date) {
+						const index = this.mentor.blockedTimes.map(entry => Number(entry.date)).indexOf(Number(date));
+						if (index === -1)
+							return []
+						else
+							return this.mentor.blockedTimes[index].times;
+					},
+
+					confirmBooking(date, startTime, length) {
+						bookingData.store({
+							date,
+							startTime,
+							length,
+							fee: this.mentor.fee * length,
+							mentor: {
+								uid: 0,
+								name: this.mentor.name,
+								fee: this.mentor.fee
+							}
+						});
+
+						// Redirect to checkout page.
+						const domain = window.location.href.split('/').slice(0, -1).join('/');
+						window.location.assign(domain + '/checkout.html');
+					}
+				}
+			});
+
+			http.get('/mentor/0')
+				.then(package => {
+					vue.mentor = package.data;
+					vue.mentor.dates.forEach(entry => {
+						entry.date = new Date(entry.date);
+					});
+					vue.mentor.blockedTimes.forEach(entry => {
+						entry.date = new Date(entry.date);
+					});
+				})
+				.catch(err => console.error(err));
+
+			function getValues (start, end, interval) {
+				const diff = end - start;
+				const count = diff / interval;
+
+				let arr = new Array(count + 1);
+				for (var i = 0; i < arr.length; i++)
+					arr[i] = start + interval * i;
+
+				return arr;
+			}
+		</script>
+
+
+	</body>
+</html>

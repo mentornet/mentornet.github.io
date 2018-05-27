@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 app.v1/
 node_modules
 *.swp
 *~
 server.log
 data/*.json
+=======
+*~
+*.swp
+node_modules/
+push.bat
+>>>>>>> c872e11e23d79f00b811dadcde6fa2e66c510a8b

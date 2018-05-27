@@ -1,0 +1,539 @@
+<html>
+	<head>
+		<!-- <HEAD> TEMPLATE -->
+		<!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- CSS tags. nb: files relative to ./nav-redesign, not ./ -->
+    <link href="./vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./vendor/font-awesome/css/font-awesome.min.css">
+		<style>
+			a:hover {
+				text-decoration: none;
+			}
+		</style>
+
+		<!-- END TEMPLATE -->
+
+		<title>Mentor Net - Sign Up</title>
+	</head>
+	<body>
+
+			<header class="container pt-2 pb-2 bg-dark text-light">
+				<h4 class="row mb-0">
+					<a href="index.html" class="text-light col-6 px-2">Mentor Net</a>
+					<small class="text-right col px-2 mt-1">Sign Up</small>
+				</h4>
+			</header>
+
+			<!-- User pre-auth / log in / sign up mechanism: vue entry -->
+			<div id="vue-entry"
+				style="display: none" v-show="true"
+				class="container py-3 w-100">
+
+					<div class="py-2 w-100 bg-danger text-light" v-show="errorMessage.length">
+						<p class="text-center m-0">Error: {{ errorMessage }}</p>
+					</div>
+
+					<form
+						action="javascript:void(0)"
+						@submit="setState(uiStates.contactDetails)"
+						v-show="uiState === uiStates.loginDetails">
+
+						<p class="text-center lead text-muted">Step 1: Login Details</p>
+
+						<small>Email</small>
+						<input
+							v-model="email"
+							@input="(ev) => isEmailInvalid = !ev.target.checkValidity()"
+
+							class="form-control mb-2"
+							type="email"
+							autocomplete="off"
+							placeholder="example@email.com"
+							required/>
+
+						<small>Password</small>
+						<input
+							v-model="passwd"
+							class="form-control"
+							type="password"
+							autocomplete="off"
+							placeholder="Password"
+							required/>
+
+						<div class="mt-3">
+							<button
+								type="submit"
+								class="btn btn-primary w-100"
+								:disabled="isEmailInvalid || !passwd.length"
+								>Next</button>
+						</div>
+					</form>
+
+					<form
+						action="javascript:void(0)"
+						@submit="setState(uiStates.mentorSwitch)"
+						v-show="uiState === uiStates.contactDetails">
+
+						<p class="text-center lead text-muted">Step 2: Contact Details</p>
+
+						<input
+							v-model="name"
+							class="form-control"
+							type="text"
+							autocomplete="off"
+							placeholder="Your Name"
+							required/>
+						<p class="small mb-0 pt-1">Other users will see you by your name.</p>
+
+						<input
+							v-model="phone"
+							class="form-control mt-3"
+							type="tel"
+							autocomplete="off"
+							placeholder="04XXXXXXXX"
+							/>
+						<p class="small mb-0 pt-1">If you give us your phone number we can contact you more easily.</p>
+
+						<div class="row mt-3">
+							<div class="col">
+								<button
+									type="button"
+									class="btn btn-secondary w-100"
+									@click="setState(uiStates.loginDetails)">Back</button>
+							</div>
+							<div class="col">
+								<button
+									class="btn btn-primary w-100"
+									:disabled="!name.length"
+									type="submit">Next</button>
+								</div>
+							</div>
+					</form>
+
+					<div v-show="uiState === uiStates.mentorSwitch">
+						<p>Do you want to be a mentor?</p>
+
+						<div class="row">
+							<div class="col">
+								<button
+									class="btn btn-secondary w-100"
+									@click="setState(uiStates.contactDetails)">Back</button>
+							</div>
+							<div class="col">
+								<button
+									class="btn btn-primary w-100"
+									@click="setState(uiStates.studentFinish)">No</button>
+							</div>
+							<div class="col">
+								<button
+									class="btn btn-primary w-100"
+									@click="setState(uiStates.mentorSkills)">Yes</button>
+							</div>
+						</div>
+					</div>
+
+					<div v-show="uiState === uiStates.studentFinish">
+
+						<p class="text-center lead text-muted">Step 3: Get Started</p>
+
+						<p>Then you're all set! Check your info:</p>
+						<!-- TODO -->
+						<table class="w-100 text-left">
+							<tr>
+								<th>Email</th>
+								<td class="text-right">{{ email }}</td>
+							</tr>
+							<tr>
+								<th>Password</th>
+								<td class="text-right"> Kept secure </td>
+							</tr>
+							<tr>
+								<th>Name</th>
+								<td class="text-right">{{ name }}</td>
+							</tr>
+							<tr>
+								<th>Phone #</th>
+								<td class="text-right">{{ phone.length ? phone : 'Not given' }}</td>
+							</tr>
+						</table>
+						<div class="row mt-3">
+							<div class="col">
+								<button 
+									class="btn btn-secondary w-100"
+									@click="setState(uiStates.mentorSwitch)">Back</button>
+							</div>
+							<div class="col">
+								<button
+									class="btn btn-primary w-100"
+									@click="signup()">Get started</button>
+							</div>
+						</div>
+					</div>
+
+					<div v-show="uiState === uiStates.mentorSkills">
+						<p class="text-center lead text-muted">Step 3: Share Your Skills</p>
+
+						<p class="mb-3 py-1" v-if="skills.length === 0">What can you mentor?</p>
+						<form action="javascript:void(0);" @submit="addSkill" class="text-left">
+							<span
+								style="display: none"
+								v-for="(skill, index) in skills"
+								v-show="1"
+								class="text-light btn btn-sm btn-dark mx-1 mb-3"
+								:key="index"
+								:index="index"
+								:skill="skill"
+								@click="deleteSkill(index)">
+
+								<span class="py-1">
+									{{ skill.slice(0,1).toUpperCase() + skill.slice(1) }}
+									<i class="ml-1 fa fa-close"></i>
+								</span>
+							
+							</span>
+							<input
+								ref="skillInput"
+								@input="(ev) => validateSkillInput(ev.target)"
+								class="form-control"
+								type="text"
+								required
+								placeholder="Skill (e.g.: APA 6 referencing)" />
+							<button
+								type="submit"
+								class="btn btn-outline-info w-100 mt-3">Add Skill</button>
+						</form>
+						<div class="row">
+							<div class="col">
+								<button 
+									class="btn btn-secondary w-100"
+									@click="setState(uiStates.mentorSwitch)">Back</button>
+							</div>
+							<div class="col">
+								<button
+									class="btn btn-primary w-100"
+									:disabled="!skills.length"
+									@click="setState(uiStates.mentorRate)">Next</button>
+							</div>
+						</div>
+					</div>
+
+					<form v-show="uiState === uiStates.mentorRate" @submit="setState(uiStates.mentorPayment1)">
+						<p class="text-center lead text-muted">Step 4: Hourly Rate</p>
+
+						<p class="mb-0">How much do you charge per hour?</p>
+
+						<div class="row pt-2 justify-content-center">
+							<div class="input-group col-4">
+								<div class="input-group-prepend">
+									<span class="input-group-text">$</span>
+								</div>
+								<input
+									v-model="rate"
+									class="form-control"
+									type="tel"
+									inputmode="numeric"
+									pattern="\d+"
+									autocomplete="off"
+									required/>
+							</div>
+						</div>
+
+						<div class="row pt-2">
+							<div class="col-6">
+								<button 
+									type="button"
+									class="btn btn-secondary w-100"
+									@click="setState(uiStates.mentorSkills)">Back</button>
+							</div>
+							<div class="col-6">
+								<button
+									type="submit"
+									:class="nextButtonClass">Next</button>
+							</div>
+						</div>
+					</form>
+
+					<div v-show="uiState === uiStates.mentorPayment1">
+						<p class="text-center lead text-muted">Step 5: Preferred Payment</p>
+
+						<p>How would you like to get paid?</p>
+
+						<div class="row">
+							<div class="col-4">
+								<button 
+									class="btn btn-secondary w-100"
+									@click="setState(uiStates.mentorRate)">Back</button>
+							</div>
+							<div class="col-8">
+								<button
+									class="btn btn-outline-primary w-100"
+									@click="setState(uiStates.mentorPayment2A)">BSB & Account No.</button>
+							</div>
+							<div class="col-12 mt-3">
+								<button
+									:class="nextButtonClass"
+									@click="setState(uiStates.mentorPayment2B)">PayID</button>
+							</div>
+						</div>
+					</div>
+
+					<form action="javascript:void(0)"
+						@submit="payid=''; setState(uiStates.mentorFinish)"
+						v-show="uiState === uiStates.mentorPayment2A">
+						<p class="text-center lead text-muted">Step 5: Preferred Payment</p>
+
+						<input
+							v-model="bsb"
+							class="form-control"
+							type="tel"
+							inputmode="numeric"
+							pattern="\d+"
+							autocomplete="off"
+							placeholder="BSB"
+							required/>
+						<input
+							v-model="accountNumber"
+							class="form-control mt-3"
+							type="tel"
+							inputmode="numeric"
+							pattern="\d+"
+							autocomplete="off"
+							placeholder="Account No."
+							required/>
+
+						<div class="row mt-3">
+							<div class="col">
+								<button 
+									class="btn btn-secondary w-100"
+									@click="setState(uiStates.mentorPayment1)">Back</button>
+							</div>
+							<div class="col">
+								<button
+									class="btn btn-primary w-100"
+									:disabled="!bsbValid || !accountNumberValid"
+									type="submit">Done</button>
+							</div>
+						</div>
+					</form>
+
+					<form v-show="uiState === uiStates.mentorPayment2B"
+						action="javascript:void(0)"
+						@submit="setState(uiStates.mentorFinish)">
+						<p class="text-center lead text-muted">Step 5: Preferred Payment</p>
+
+						<input
+							v-model="payid"
+							class="form-control"
+							type="text"
+							autocomplete="off"
+							placeholder="PayID"
+							required/>
+
+						<div class="row mt-3">
+							<div class="col">
+								<button 
+									type="button"
+									class="btn btn-secondary w-100"
+									@click="setState(uiStates.mentorPayment1)">Back</button>
+							</div>
+							<div class="col">
+								<button
+									class="btn btn-primary w-100"
+									type="submit"
+									:disabled="!payid.length">Done</button>
+							</div>
+						</div>
+					</form>
+
+					<div v-show="uiState === uiStates.mentorFinish">
+						<p class="text-center lead text-muted">Step 6: Get Started</p>
+						<p>All set! Check your info:</p>
+
+						<table class="w-100 text-left">
+							<tr>
+								<th>Email</th>
+								<td class="text-right">{{ email }}</td>
+							</tr>
+							<tr>
+								<th>Password</th>
+								<td class="text-right"> Kept secure </td>
+							</tr>
+							<tr class="pt-2">
+								<th>Name</th>
+								<td class="text-right">{{ name }}</td>
+							</tr>
+							<tr>
+								<th>Phone No.</th>
+								<td class="text-right">{{ phone.length ? phone : 'Not given' }}</td>
+							</tr>
+							<tr class="pt-2">
+								<th>Skills</th>
+								<td class="text-right">{{ skills.length > 1 ? skills.join(', ') : skills[0] }}</td>
+							</tr>
+							<tr class="pt-2">
+								<th>Rate</th>
+								<td class="text-right">${{ rate }} / hour</td>
+							</tr>
+							<tr v-if="payid.length" class="pt-2">
+								<th>PayID</th>
+								<td class="text-right">{{ payid }}</td>
+							</tr>
+							<tr v-if="!payid.length" class="pt-2">
+								<th>BSB</th>
+								<td class="text-right">{{ bsb }}</td>
+							</tr>
+							<tr v-if="!payid.length">
+								<th>Account No.</th>
+								<td class="text-right">{{ accountNumber }}</td>
+							</tr>
+						</table>
+
+						<div class="row mt-3">
+							<div class="col">
+								<button 
+									:class="prevButtonClass"
+									@click="setState(uiStates.mentorPayment1)">Back</button>
+							</div>
+							<div class="col">
+								<button
+									:class="nextButtonClass"
+									@click="signup()">Get started</button>
+							</div>
+						</div>
+					</div>
+			</div>
+
+		<!-- Javascript (global) -->
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="./js/generics.js"></script>
+		<script src="./js/session-data.js"></script>
+
+		<!-- Javascript (local) -->
+		<script>
+			let pageData = {
+				email: '',
+				passwd: '',
+
+				name: '',
+				phone: '',
+
+				skills: [],
+				rate: 30,
+
+				payid: '',
+				bsb: '',
+				accountNumber: '',
+
+				errorMessage: '',
+				uiState: 0,
+
+				uiStates: {
+					loginDetails: 0,
+					contactDetails: 1,
+
+					mentorSwitch: 2,
+
+					studentFinish: 3,
+
+					mentorSkills: 4,
+					mentorRate: 9, 
+					mentorPayment1: 5,
+					mentorPayment2A: 6,
+					mentorPayment2B: 7,
+					mentorFinish: 8
+				},
+
+				nextButtonClass: 'btn btn-primary w-100 ',
+				prevButtonClass: 'btn btn-secondary w-100 ',
+
+				isEmailInvalid: true
+			};
+
+			let vue = new Vue({
+				el: '#vue-entry',
+				data: pageData,
+				computed: {
+					bsbValid () {
+						return this.bsb.length === 6 && Number.isNaN(Number(this.bsb)) === false;
+					},
+					accountNumberValid () {
+						return this.accountNumber.length && Number.isNaN(Number(this.accountNumber)) === false;
+					}
+				},
+				methods: {
+					buildSignupDetails(model) {
+						Object.keys(model).forEach(key => this[key] = model[key]);
+					},
+					setState(state) {
+						this.uiState = state;
+						window.location.hash = state;
+						sessionStorage.setItem('signupDetails', JSON.stringify(JSON.parse(JSON.stringify(this.$data))));
+					},
+					addSkill () {
+						let skillInput = this.$refs.skillInput;
+						if (this.validateSkillInput(skillInput)) {
+							this.skills = this.skills.concat(skillInput.value);
+							skillInput.value = '';
+						}
+					},
+					validateSkillInput (el) {
+						const isValid = !this.skills.includes(el.value);
+						const validMessage = '', invalidMessage = 'Skill already given';
+						el.setCustomValidity(isValid ? validMessage : invalidMessage);
+						return isValid;
+					},
+					deleteSkill (skillIndex) {
+						let tmpArr = this.skills.concat();
+						tmpArr.splice(skillIndex, 1);
+						this.skills = tmpArr;
+						this.validateSkillInput( this.$refs.skillInput );
+					},
+					signup () {
+						this.setErrorMessage('');
+
+						const ajaxPackage = {
+							email: this.email,
+							passwd: this.passwd,
+
+							name: this.name,
+							phone: this.phone.split('').filter(c => c !== ' ').join(''),
+
+							skills: this.skills,
+							rate: this.rate,
+
+							payid: this.payid,
+							bsb: this.bsb,
+							accountNumber: this.accountNumber
+						};
+
+						http.post('/user', ajaxPackage)
+							.then(response => {
+								sessionStorage.removeItem('signupDetails');
+								sessionManager.setDataFromModel(response.data);
+
+								const isMentor = ajaxPackage.skills.length > 0;
+								redirect(isMentor ? 'requests.html' : 'search.html');
+							})
+							.catch(handleAxiosError)
+							.then(this.setErrorMessage);
+					},
+					setErrorMessage(msg) {
+						this.errorMessage = msg;
+					}
+				}
+			});
+
+			if (sessionStorage.getItem('signupDetails')) {
+				vue.buildSignupDetails(JSON.parse(sessionStorage.getItem('signupDetails')));
+				if (window.location.hash) {
+					vue.setState(Number(window.location.hash.slice(1)));
+				}
+			}
+
+		</script>
+	</body>
+</html>
