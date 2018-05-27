@@ -1,0 +1,29 @@
+{
+  "name": "Nessa",
+  "fee": 20,
+  "units": [
+    "PSY3041",
+    "PSY3051",
+    "PSY3062",
+    "PSY3932"
+  ],
+  "skills": [
+    "Report / Essay Writing",
+    "Critical Thinking",
+    "Psychology Pathways",
+    "Practical Skills",
+    "Lecture Materials"
+  ],
+  "interval": 0.5,
+  "availabilities": {
+    "1": {
+      "from": 13,
+      "to": 18
+    },
+    "5": {
+      "from": 13,
+      "to": 18
+    }
+  },
+  "uid": 0
+}

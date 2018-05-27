@@ -16,5 +16,24 @@
       "current": -1,
       "history": []
     }
+  },
+  {
+    "uid": 1525840794445,
+    "email": "tom@joinmentornet.me",
+    "passwd": "$2a$12$a73XkmgXJZkv3FJE8Y.VTeCGDzp5ZzRuOJ2AR1MeXErEWs7Igo3qi",
+    "name": "Thomas",
+    "phone": "045079678",
+    "payid": "0450797678",
+    "rate": 30,
+    "isActive": false,
+    "isLoggedIn": true,
+    "skills": [
+      "Brushing Teeth",
+      "Washing Hair"
+    ],
+    "sessions": {
+      "current": -1,
+      "history": []
+    }
   }
 ]

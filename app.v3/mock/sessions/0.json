@@ -1,0 +1,26 @@
+{
+  "mentor": {
+    "uid": 0,
+    "name": "Nessa",
+    "fee": 20
+  },
+  "student": {
+    "payid": "0450797678",
+    "bsb": "",
+    "accountNumber": "",
+    "email": "",
+    "phoneNumber": "0450797678"
+  },
+  "booking": {
+    "date": 1527429600000,
+    "startTime": 15.5,
+    "length": 2,
+    "fee": 40
+  },
+  "viewTokens": {
+    "mentor": "$2a$12$gKrEyNgKw",
+    "student": "$2a$12$3CxRKPxEh"
+  },
+  "uid": 0,
+  "state": 2
+}
