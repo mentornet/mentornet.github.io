@@ -79,7 +79,7 @@
 				@confirm-booking="(startTime, length) => confirmBooking(date.date, startTime, length)"
 				:date="date.date"
 				:times="date.times"
-				:disabled-times="[]"
+				:blocked-times="getMentorBlockedTimes(date.date)"
 				:key="index"></booking>
 
 		</div>
@@ -87,6 +87,7 @@
 		<!-- Javascript (global) -->
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="../js/generics.js"></script>
 
 		<!-- Javascript (local) -->
 		<script src="./booking.data.js"></script>
@@ -118,41 +119,19 @@
 						}
 					}
 				},
-				mounted () {
-					let m = JSON.parse(JSON.stringify(this.mentor));
-
-					m.dates = [];
-
-					const now = new Date();
-
-					let i = 0;
-					while (m.dates.length < Object.keys(this.mentor.availabilities).length * 2) {
-						let key = i % 7;
-						if (key in this.mentor.availabilities) {
-							const dateNumber = (now.getDate()-now.getDay())+i;
-							if (dateNumber >= now.getDate()) {
-								const { from, to, interval } = this.mentor.availabilities[key];
-								const [ year, month ] = [
-									now.getFullYear(),
-									now.getMonth(),
-								];
-
-								m.dates.push({
-									date: new Date(year, month, dateNumber),
-									times: getValues(from, to, interval)
-								});
-							}
-						}
-						i++;
-					}
-
-					this.mentor = m;
-				},
 				methods: {
 					gotoSessions() {
 						document.querySelector('#sessions').scrollIntoView({
 							behavior: 'smooth'
 						});
+					},
+
+					getMentorBlockedTimes (date) {
+						const index = this.mentor.blockedTimes.map(entry => Number(entry.date)).indexOf(Number(date));
+						if (index === -1)
+							return []
+						else
+							return this.mentor.blockedTimes[index].times;
 					},
 
 					confirmBooking(date, startTime, length) {
@@ -174,6 +153,18 @@
 					}
 				}
 			});
+
+			http.get('/mentor/0')
+				.then(package => {
+					vue.mentor = package.data;
+					vue.mentor.dates.forEach(entry => {
+						entry.date = new Date(entry.date);
+					});
+					vue.mentor.blockedTimes.forEach(entry => {
+						entry.date = new Date(entry.date);
+					});
+				})
+				.catch(err => console.error(err));
 
 			function getValues (start, end, interval) {
 				const diff = end - start;

@@ -53,7 +53,7 @@ const booking = Vue.component('booking', {
 			</div>
 		</div>
 	`,
-	props: [ 'date', 'times', 'disabledTimes' ],
+	props: [ 'date', 'times', 'blockedTimes' ],
 	data () {
 		return {
 			isVisible: false,
@@ -103,7 +103,15 @@ const booking = Vue.component('booking', {
 		updateEndTime () {
 			const start = this.$refs.start, end = this.$refs.end;
 			const chosenStartTime = Number(start.value);
-			const endTime = this.times[this.times.length-1];
+
+			// Figure out how long they can book til
+			let endTime;
+			for (var i = 0, t = this.blockedTimes[i]; i < this.blockedTimes.length; i++)
+				if (t > chosenStartTime) {
+					endTime = t;
+					break;
+				}
+			if (!endTime) endTime = this.times[this.times.length-1];
 
 			const endTimes = this.getValues(chosenStartTime, endTime, this.timeInterval).slice(1);
 
@@ -117,7 +125,7 @@ const booking = Vue.component('booking', {
 					end,
 					this.formatHourString(time),
 					time,
-					false
+					this.blockedTimes.indexOf(time) !== -1
 				);
 			});
 
@@ -142,7 +150,7 @@ const booking = Vue.component('booking', {
 		},
 
 		confirmBooking () {
-			this.$emit('confirm-booking', this.$refs.start.value, this.length);
+			this.$emit('confirm-booking', Number(this.$refs.start.value), this.length);
 		}
 	},
 	mounted () {
@@ -153,7 +161,7 @@ const booking = Vue.component('booking', {
 				this.$refs.start,
 				this.formatHourString(time),
 				time,
-				this.disabledTimes.indexOf(time) !== -1
+				this.blockedTimes.indexOf(time) !== -1
 			);
 		});
 
