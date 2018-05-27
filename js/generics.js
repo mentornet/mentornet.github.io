@@ -38,5 +38,8 @@ function handleAxiosError (error) {
 const http = axios.create({
 	baseURL: 'http://api.joinmentornet.me:8080/', // 'http://localhost:8080/'
 	timeout: 3000,
-	withCredentials: true
+	withCredentials: true,
+  headers: {
+		'Cache-Control': 'no-cache'
+	}
 });

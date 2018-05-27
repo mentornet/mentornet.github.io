@@ -154,17 +154,19 @@
 				}
 			});
 
-			http.get('/mentor/0')
-				.then(package => {
-					vue.mentor = package.data;
-					vue.mentor.dates.forEach(entry => {
-						entry.date = new Date(entry.date);
-					});
-					vue.mentor.blockedTimes.forEach(entry => {
-						entry.date = new Date(entry.date);
-					});
-				})
-				.catch(err => console.error(err));
+			window.setTimeout(() => {
+				http.get('/mentor/0')
+					.then(package => {
+						vue.mentor = package.data;
+						vue.mentor.dates.forEach(entry => {
+							entry.date = new Date(entry.date);
+						});
+						vue.mentor.blockedTimes.forEach(entry => {
+							entry.date = new Date(entry.date);
+						});
+					})
+					.catch(err => console.error(err));
+			}, 30);
 
 			function getValues (start, end, interval) {
 				const diff = end - start;
