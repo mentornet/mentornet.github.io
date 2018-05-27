@@ -144,6 +144,16 @@
 
 					<form action="javascript:void(0);" @submit="changeState(states.end)">
 
+						<p class="small mb-0">Name</p>
+						<input
+							v-model="input.name"
+							class="form-control form-control-sm mt-1"
+							type="text"
+							pattern="\w+"
+							autocomplete="off"
+							placeholder="Your Name"
+							required/>
+
 						<p class="small mb-0">Phone Number</p>
 						<input
 							v-model="input.phoneNumber"
@@ -175,7 +185,7 @@
 								<button
 									class="btn btn-sm btn-primary w-100"
 									type="submit"
-									:disabled="input.phoneNumber.length !== 10">Done</button>
+									:disabled="input.phoneNumber.length !== 10 || input.name.length === 0">Done</button>
 							</div>
 						</div>
 					</form>
@@ -215,6 +225,7 @@
 										@click="changeState(input.payid ? states.payid : states.bsb)">Change</button>
 							</div>
 						</div>
+						<small class="text-muted">Hint: Quote your session date and time in your transfer to get your payment verified faster.</small>
 					</div>
 
 					<p class="small text-center">Then {{ session.mentor.name }} will contact you on {{ dateString }} using your details:</p>
@@ -267,6 +278,7 @@
 						accountNumber: '',
 
 						email: '',
+						name: '',
 						phoneNumber: ''
 					},
 
