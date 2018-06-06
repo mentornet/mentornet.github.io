@@ -53,7 +53,7 @@ const booking = Vue.component('booking', {
 			</div>
 		</div>
 	`,
-	props: [ 'date', 'times', 'blockedTimes' ],
+	props: [ 'date', 'times', 'blockedTimes', 'minInterval' ],
 	data () {
 		return {
 			isVisible: false,
@@ -102,7 +102,7 @@ const booking = Vue.component('booking', {
 		},
 		updateEndTime () {
 			const start = this.$refs.start, end = this.$refs.end;
-			const chosenStartTime = Number(start.value);
+			const chosenStartTime = Number(start.value) +  this.minInterval;
 
 			// Figure out how long they can book til
 			let endTime;
@@ -113,7 +113,7 @@ const booking = Vue.component('booking', {
 				}
 			if (!endTime) endTime = this.times[this.times.length-1];
 
-			const endTimes = this.getValues(chosenStartTime, endTime, this.timeInterval).slice(1);
+			const endTimes = this.getValues(chosenStartTime, endTime, this.timeInterval);
 
 			end.disabled = false;
 
@@ -165,6 +165,6 @@ const booking = Vue.component('booking', {
 			);
 		});
 
-		this.$refs.end.disabled = true;
+		this.updateEndTime();
 	}
 });

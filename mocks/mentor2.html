@@ -95,6 +95,7 @@
 
 			<booking v-for="(date, index) in mentor.dates"
 				@confirm-booking="(startTime, length) => confirmBooking(date.date, startTime, length)"
+				:min-interval="mentor.minInterval"
 				:date="date.date"
 				:times="date.times"
 				:blocked-times="getMentorBlockedTimes(date.date)"
