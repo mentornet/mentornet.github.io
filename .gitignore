@@ -3,3 +3,5 @@
 node_modules/
 push.bat
 vendor/
+v1/
+v2/
