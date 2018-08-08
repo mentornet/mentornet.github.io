@@ -1,5 +1,5 @@
-*~
-*.swp
+**/*~
+**/*.swp
 node_modules/
 push.bat
 vendor/
