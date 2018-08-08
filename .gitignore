@@ -4,3 +4,5 @@ node_modules/
 push.bat
 v1/
 v2/
+**/*.less
+**/*.scss
